@@ -340,7 +340,7 @@ class Component extends DCLogic {
     super(props);
     this.rootRef = React.createRef();
     this.statsRef = React.createRef();
-    this.targets = [44, 6, 7, 10];
+    this.targets = [56, 12, 6, 8];
     this.HERO_COUNT = 4;
   }
 
@@ -390,26 +390,35 @@ class Component extends DCLogic {
   }
 
   renderVals(){
-    const labels = ['Papers','NSF / NIH Grants','Best Paper Awards','Lab Members'];
-    const suffix = ['','','+','+'];
+    const labels = ['Publications','Lab Members','Research Grants','Years Active'];
+    const suffix = ['','','','+'];
     const stats = this.targets.map((t,i)=>({ display:String(this.state.counts[i]), suffix:suffix[i], label:labels[i] }));
 
     const TAG = {
-      NEW:    { fg:'#fff',    bg:'#C8102E' },
-      PAPER:  { fg:'#003087', bg:'#E3EAF8' },
-      AWARD:  { fg:'#8A6A1E', bg:'#F6ECCF' },
-      GRANT:  { fg:'#1F6B3B', bg:'#DDF0E4' },
-      TALK:   { fg:'#5A3FA0', bg:'#EAE3F7' },
-      MEDIA:  { fg:'#B23A00', bg:'#FBE6DA' }
+      NEW:     { fg:'#fff',    bg:'#C8102E' },
+      PAPER:   { fg:'#003087', bg:'#E3EAF8' },
+      AWARD:   { fg:'#8A6A1E', bg:'#F6ECCF' },
+      GRANT:   { fg:'#1F6B3B', bg:'#DDF0E4' },
+      TALK:    { fg:'#5A3FA0', bg:'#EAE3F7' },
+      MEDIA:   { fg:'#B23A00', bg:'#FBE6DA' },
+      SERVICE: { fg:'#5A3FA0', bg:'#EAE3F7' },
+      STUDENT: { fg:'#1F6B3B', bg:'#DDF0E4' }
     };
     const rawNews = [
-      { date:'May 2026', tag:'NEW',   title:'Two papers accepted at ICML 2026 on fault-tolerant inference 🎉' },
-      { date:'Apr 2026', tag:'AWARD', title:'Prof. Jiao named Associate Editor of IEEE TCAD' },
-      { date:'Mar 2026', tag:'GRANT', title:'New NSF award to advance hyperdimensional computing for genomics' },
-      { date:'Feb 2026', tag:'NEW',   title:'Best Paper Award at DATE 2026 for resilient DNN accelerator design 🏆' },
-      { date:'Jan 2026', tag:'PAPER', title:'MoleHD extension published in Nature Communications' },
-      { date:'Dec 2025', tag:'TALK',  title:'Invited keynote on brain-inspired computing at ASP-DAC' },
-      { date:'Nov 2025', tag:'MEDIA', title:'Lab research on hyperdimensional computing featured in WIRED' }
+      { date:'05/2023', tag:'NEW',     title:'Our research is featured in WIRED 🎉' },
+      { date:'05/2023', tag:'STUDENT', title:'Rahul Thapa named a 2023 Knight-Hennessy Scholar at Stanford!' },
+      { date:'05/2023', tag:'STUDENT', title:'Caroline Maclaren named a 2023 Fulbright Scholar!' },
+      { date:'05/2023', tag:'TALK',    title:'Xun Jiao delivered invited talks at Peking U, HKUST (GZ), and CAS/ICT.' },
+      { date:'04/2023', tag:'MEDIA',   title:'Our research is featured in Quanta Magazine.' },
+      { date:'03/2023', tag:'SERVICE', title:'Xun Jiao serves as Web Chair of ESWEEK 2023.' },
+      { date:'11/2022', tag:'AWARD',   title:'Xun Jiao receives "IEEE Young Engineer of the Year Award!"' },
+      { date:'08/2022', tag:'GRANT',   title:'Our project on "AI-based Diagnosis of Alzheimer’s" is funded by NIH!' },
+      { date:'08/2022', tag:'GRANT',   title:'Our project on "Generalizable Approximate Computing" is funded by NSF!' },
+      { date:'06/2022', tag:'GRANT',   title:'Our project on "Smart Green Environment Infrastructure" is funded by NSF!' },
+      { date:'02/2022', tag:'STUDENT', title:'Mauro Sanchirico receives College of Engineering Outstanding Graduate Student Award.' },
+      { date:'02/2022', tag:'AWARD',   title:'"Energy-Efficient Hyperdimensional Computing" at DATE 2022 is a Best Paper Candidate!' },
+      { date:'12/2021', tag:'MEDIA',   title:'Xun Jiao was interviewed by Digital Engineering Magazine.' },
+      { date:'11/2020', tag:'GRANT',   title:'Our project on "Machine Learning-based Signal Processing" is funded by L3Harris!' }
     ];
     const news = rawNews.map(n=>{
       const t = TAG[n.tag] || TAG.PAPER;
