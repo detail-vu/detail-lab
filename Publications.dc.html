@@ -22,12 +22,15 @@
   .detail-navlinks a{flex:0 0 auto;}
   .detail-pub{transition:box-shadow .18s ease, border-color .18s ease;}
   .detail-pub:hover{box-shadow:0 14px 32px -22px rgba(20,30,60,.4);border-color:#C9D6EC;}
+  .detail-pdf{transition:background .15s ease, transform .12s ease, box-shadow .2s ease;}
+  .detail-pdf:hover{background:#A50D26!important;transform:translateY(-1px);box-shadow:0 8px 16px -6px rgba(200,16,46,.7)!important;}
   .detail-filter{transition:background .15s ease, color .15s ease, border-color .15s ease;cursor:pointer;}
   @media (max-width:680px){
     .detail-brand-sub{display:none!important;}
     .detail-navlinks{gap:18px!important;justify-content:flex-start!important;}
     .detail-h1{font-size:30px!important;}
-    .detail-pubmeta{flex-direction:column!important;align-items:flex-start!important;gap:4px!important;}
+    .detail-pubrow{flex-direction:column!important;}
+    .detail-pubright{flex-direction:row!important;align-items:center!important;flex-wrap:wrap!important;}
   }
 </style>
 </helmet>
@@ -60,7 +63,7 @@
     <div style="max-width:min(1680px,94vw);margin:0 auto;padding:40px 28px 44px;">
       <div style="font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#D1A73B;margin-bottom:12px;">Publications</div>
       <h1 class="detail-h1" style="font-size:38px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;line-height:1.1;">Publications</h1>
-      <p style="font-size:16px;line-height:1.5;color:#C9D4EC;margin:0;max-width:620px;">Peer-reviewed journal and conference papers across our four research pillars. Filter by type or topic, search by title or author, and expand any entry for the full citation and PDF. 📄</p>
+      <p style="font-size:16px;line-height:1.5;color:#C9D4EC;margin:0;max-width:620px;">Peer-reviewed journal and conference papers across our four research pillars. Filter by type or topic, search by title or author. PDF links are shown inline. 📄</p>
     </div>
   </section>
 
@@ -86,32 +89,21 @@
       <div style="font-size:12.5px;color:#8A90A6;font-weight:600;margin-bottom:14px;">{{ countLabel }}</div>
       <div style="display:flex;flex-direction:column;gap:12px;">
         <sc-for list="{{ pubs }}" as="p" hint-placeholder-count="6">
-          <article class="detail-pub" style="background:#fff;border:1px solid #E1E6F0;border-left:4px solid {{ p.accent }};border-radius:14px;overflow:hidden;">
-            <div onClick="{{ p.onToggle }}" style="cursor:pointer;padding:18px 20px;display:flex;gap:16px;align-items:flex-start;">
+          <article class="detail-pub" style="background:#fff;border:1px solid #E1E6F0;border-left:4px solid {{ p.accent }};border-radius:14px;padding:16px 20px;">
+            <div class="detail-pubrow" style="display:flex;gap:16px;align-items:flex-start;">
               <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px;">
                 <span style="font-size:20px;font-weight:800;color:#003087;line-height:1;">{{ p.year }}</span>
                 <span style="font-size:9.5px;font-weight:800;letter-spacing:.05em;color:{{ p.typeFg }};background:{{ p.typeBg }};padding:2px 7px;border-radius:5px;">{{ p.type }}</span>
               </div>
-              <div style="flex:1;">
-                <h3 style="font-size:15.5px;font-weight:700;line-height:1.4;margin:0 0 6px;color:#1A1A2E;">{{ p.title }} <sc-if value="{{ p.featured }}"><span style="color:#D1A73B;">★</span></sc-if></h3>
-                <div class="detail-pubmeta" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:#5A6079;">
-                  <span>{{ p.authors }}</span>
-                  <span style="color:#C2C8D8;">·</span>
-                  <span style="font-weight:600;color:#003087;">{{ p.venue }}</span>
-                  <span style="font-size:11px;font-weight:700;color:{{ p.topicFg }};background:{{ p.topicBg }};padding:2px 8px;border-radius:20px;">{{ p.topic }}</span>
-                </div>
+              <div style="flex:1;min-width:0;">
+                <h3 style="font-size:15.5px;font-weight:700;line-height:1.4;margin:0 0 5px;color:#1A1A2E;">{{ p.title }} <sc-if value="{{ p.featured }}"><span style="color:#D1A73B;">★</span></sc-if></h3>
+                <div style="font-size:12.5px;color:#5A6079;line-height:1.5;">{{ p.authors }} <span style="color:#C2C8D8;">·</span> <span style="font-weight:600;color:#003087;">{{ p.venue }}</span></div>
               </div>
-              <span style="flex:0 0 auto;color:#9AA3BD;font-size:13px;transform:{{ p.caret }};transition:transform .2s ease;margin-top:3px;">▾</span>
+              <div class="detail-pubright" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+                <span style="font-size:11px;font-weight:700;color:{{ p.topicFg }};background:{{ p.topicBg }};padding:3px 10px;border-radius:20px;white-space:nowrap;">{{ p.topic }}</span>
+                <sc-if value="{{ p.hasPdf }}"><a href="{{ p.pdf }}" target="_blank" class="detail-pdf" style="font-size:12px;font-weight:800;color:#fff;background:#C8102E;padding:6px 15px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 10px -4px rgba(200,16,46,.6);">PDF ↗</a></sc-if>
+              </div>
             </div>
-            <sc-if value="{{ p.open }}">
-              <div style="padding:0 20px 20px 88px;">
-                <p style="font-size:13.5px;line-height:1.6;color:#41485E;margin:0 0 12px;border-top:1px solid #EEF1F8;padding-top:13px;"><strong>{{ p.authors }}</strong>. "{{ p.title }}". {{ p.venueFull }}.</p>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                  <sc-if value="{{ p.hasPdf }}"><a href="{{ p.pdf }}" target="_blank" style="font-size:12px;font-weight:700;color:#fff;background:#003087;padding:7px 14px;border-radius:8px;">PDF ↗</a></sc-if>
-                  <sc-if value="{{ p.noPdf }}"><span style="font-size:12px;font-weight:700;color:#9AA3BD;background:#F1F3F8;padding:7px 14px;border-radius:8px;">PDF not available</span></sc-if>
-                </div>
-              </div>
-            </sc-if>
           </article>
         </sc-for>
       </div>
@@ -152,7 +144,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { query:'', topic:'All', ptype:'All', openId:null };
+  state = { query:'', topic:'All', ptype:'All' };
 
   constructor(props){
     super(props);
@@ -230,13 +222,12 @@ class Component extends DCLogic {
     ];
   }
 
-  toggle(id){ this.setState(s=>({ openId: s.openId===id ? null : id })); }
   onSearch(e){ this.setState({ query:e.target.value }); }
   setTopic(t){ this.setState({ topic:t }); }
   setType(t){ this.setState({ ptype:t }); }
 
   renderVals(){
-    const { query, topic, ptype, openId } = this.state;
+    const { query, topic, ptype } = this.state;
 
     const types = ['All','Journal','Conference'];
     const typeKey = { 'Journal':'JOURNAL', 'Conference':'CONF' };
@@ -263,13 +254,8 @@ class Component extends DCLogic {
     const pubs = list.map(p=>{
       const tc = this.TOPICS[p.topic] || this.TOPICS['Robust AI'];
       const ty = this.TYPE[p.type] || this.TYPE['CONF'];
-      const open = openId===p.id;
-      const hasPdf = !!(p.pdf && p.pdf.length);
       return { ...p, accent:tc.accent, topicFg:tc.fg, topicBg:tc.bg, typeFg:ty.fg, typeBg:ty.bg,
-        venueFull: (p.type==='JOURNAL'?'Journal: ':'Conference: ') + p.venue,
-        hasPdf, noPdf: !hasPdf,
-        open, caret: open?'rotate(180deg)':'rotate(0deg)',
-        onToggle:()=>this.toggle(p.id) };
+        hasPdf: !!(p.pdf && p.pdf.length) };
     });
 
     const cnt = list.length;

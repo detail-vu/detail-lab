@@ -60,42 +60,32 @@
 <div ref="{{ rootRef }}" style="min-height:100vh;background:#fff;">
 
   <!-- NAV -->
-  <header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid #E7EAF3;">
+  <header style="position:sticky;top:0;z-index:50;background:{{ navBg }};backdrop-filter:{{ navBlur }};-webkit-backdrop-filter:{{ navBlur }};border-bottom:{{ navBorder }};transition:background .25s ease, border-color .25s ease;">
     <nav style="max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;gap:16px;">
       <a href="Home.dc.html" style="display:flex;align-items:center;gap:11px;flex:0 0 auto;">
         <span style="display:inline-flex;width:36px;height:36px;border-radius:50%;background:#fff;align-items:center;justify-content:center;border:2px solid #D1A73B;flex:0 0 auto;overflow:hidden;"><img src="assets/villanova-v.jpg" alt="Villanova University" style="width:100%;height:100%;object-fit:cover;display:block;"/></span>
         <span style="display:flex;flex-direction:column;line-height:1;">
-          <span style="font-weight:800;letter-spacing:.05em;color:#003087;font-size:17px;">DETAIL <span style="color:var(--accent,#D1A73B);">LAB</span></span>
-          <span class="detail-brand-sub" style="font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A90A6;font-weight:600;margin-top:3px;white-space:nowrap;">Villanova University · ECE</span>
+          <span style="font-weight:800;letter-spacing:.05em;color:{{ navBrand }};font-size:17px;transition:color .25s ease;">DETAIL <span style="color:var(--accent,#D1A73B);">LAB</span></span>
+          <span class="detail-brand-sub" style="font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:{{ navSub }};font-weight:600;margin-top:3px;white-space:nowrap;transition:color .25s ease;">Villanova University · ECE</span>
         </span>
       </a>
       <div class="detail-navlinks" style="display:flex;align-items:center;gap:26px;font-size:14px;font-weight:500;overflow-x:auto;min-width:0;flex:1;justify-content:flex-end;white-space:nowrap;">
-        <a class="detail-navlink" href="Home.dc.html" style="color:#003087;font-weight:700;">Home</a>
-        <a class="detail-navlink" href="Research.dc.html" style="color:#5A6079;">Research</a>
-        <a class="detail-navlink" href="PaperReading.dc.html" style="color:#5A6079;display:flex;align-items:center;gap:5px;">Paper Reading <span style="color:var(--accent,#D1A73B);">★</span></a>
-        <a class="detail-navlink" href="Publications.dc.html" style="color:#5A6079;">Publications</a>
-        <a class="detail-navlink" href="People.dc.html" style="color:#5A6079;">People</a>
-        <a class="detail-navlink" href="Artifacts.dc.html" style="color:#5A6079;">Artifacts</a>
+        <a class="detail-navlink" href="Home.dc.html" style="color:{{ navHome }};font-weight:700;transition:color .25s ease;">Home</a>
+        <a class="detail-navlink" href="Research.dc.html" style="color:{{ navLink }};transition:color .25s ease;">Research</a>
+        <a class="detail-navlink" href="PaperReading.dc.html" style="color:{{ navLink }};display:flex;align-items:center;gap:5px;transition:color .25s ease;">Paper Reading <span style="color:var(--accent,#D1A73B);">★</span></a>
+        <a class="detail-navlink" href="Publications.dc.html" style="color:{{ navLink }};transition:color .25s ease;">Publications</a>
+        <a class="detail-navlink" href="People.dc.html" style="color:{{ navLink }};transition:color .25s ease;">People</a>
+        <a class="detail-navlink" href="Artifacts.dc.html" style="color:{{ navLink }};transition:color .25s ease;">Artifacts</a>
       </div>
     </nav>
   </header>
 
   <!-- ROTATING HERO (compact) -->
-  <section style="position:relative;height:340px;background:#003087;overflow:hidden;">
+  <section style="position:relative;height:404px;margin-top:-64px;background:#003087;overflow:hidden;">
 
     <!-- HERO A: Topology -->
     <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroAOp }};z-index:{{ heroAZ }};pointer-events:{{ heroAPe }};background:#003087;color:#fff;overflow:hidden;">
-      <svg viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.9;" aria-hidden="true">
-        <g stroke="#ffffff" stroke-width="1" fill="none" opacity=".22" style="animation:detailDrift2 26s ease-in-out infinite;">
-          <line x1="120" y1="60" x2="320" y2="140"/><line x1="320" y1="140" x2="240" y2="280"/><line x1="320" y1="140" x2="520" y2="90"/><line x1="520" y1="90" x2="700" y2="180"/><line x1="700" y1="180" x2="900" y2="110"/><line x1="900" y1="110" x2="1060" y2="230"/><line x1="240" y1="280" x2="460" y2="310"/><line x1="700" y1="180" x2="760" y2="320"/><line x1="900" y1="110" x2="1040" y2="50"/>
-        </g>
-        <g style="animation:detailDrift1 22s ease-in-out infinite;">
-          <circle cx="120" cy="60" r="4" fill="#D1A73B" style="animation:detailPulse 6s ease-in-out infinite;"/><circle cx="320" cy="140" r="6" fill="#ffffff" opacity=".5" style="animation:detailPulse 7s ease-in-out infinite .5s;"/><circle cx="520" cy="90" r="4" fill="#ffffff" opacity=".4"/><circle cx="700" cy="180" r="7" fill="#D1A73B" style="animation:detailPulse 8s ease-in-out infinite 1s;"/><circle cx="900" cy="110" r="5" fill="#ffffff" opacity=".5"/>
-        </g>
-        <g style="animation:detailDrift3 30s ease-in-out infinite;">
-          <circle cx="240" cy="280" r="5" fill="#ffffff" opacity=".4"/><circle cx="460" cy="310" r="4" fill="#D1A73B" opacity=".8"/><circle cx="760" cy="320" r="6" fill="#ffffff" opacity=".45"/><circle cx="1060" cy="230" r="5" fill="#D1A73B" opacity=".7"/><circle cx="1040" cy="50" r="4" fill="#ffffff" opacity=".4"/>
-        </g>
-      </svg>
+      <img src="assets/hero/hero-a.jpg" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;"/>
       <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(0,32,90,.82) 0%,rgba(0,48,135,.55) 55%,rgba(0,48,135,.25) 100%);"></div>
       <div style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
         <div style="display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:14px;"><span style="width:22px;height:1px;background:var(--accent,#D1A73B);display:inline-block;"></span>Villanova University · ECE</div>
@@ -110,14 +100,7 @@
 
     <!-- HERO B: Circuit (full-bleed) -->
     <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroBOp }};z-index:{{ heroBZ }};pointer-events:{{ heroBPe }};background:#003087;color:#fff;overflow:hidden;">
-      <svg viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.85;" aria-hidden="true">
-        <g stroke="var(--accent,#D1A73B)" stroke-width="1.4" fill="none" opacity=".4" style="animation:detailDrift1 24s ease-in-out infinite;">
-          <path d="M80 90 H300 V180 H520"/><path d="M80 250 H240 V300 H600"/><path d="M380 50 V150 H700"/><path d="M160 320 H440 V250"/><path d="M760 120 H980 V210 H1140"/><path d="M820 300 H1040 V230"/>
-        </g>
-        <g fill="var(--accent,#D1A73B)" style="animation:detailDrift3 28s ease-in-out infinite;">
-          <circle cx="80" cy="90" r="5"/><circle cx="300" cy="180" r="5"/><circle cx="520" cy="180" r="6" style="animation:detailPulse 5s infinite;"/><circle cx="80" cy="250" r="5"/><circle cx="600" cy="300" r="5"/><circle cx="380" cy="50" r="5"/><circle cx="700" cy="150" r="6"/><circle cx="440" cy="250" r="5"/><circle cx="980" cy="210" r="6" style="animation:detailPulse 6s infinite;"/><circle cx="1140" cy="210" r="5"/><circle cx="760" cy="120" r="5"/><circle cx="1040" cy="300" r="5"/>
-        </g>
-      </svg>
+      <img src="assets/hero/hero-b.jpg" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;"/>
       <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(0,32,90,.82) 0%,rgba(0,48,135,.5) 55%,rgba(0,48,135,.25) 100%);"></div>
       <div style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
         <div style="font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:12px;">DETAIL Lab · Villanova ECE</div>
@@ -195,12 +178,22 @@
       </div>
       <div style="border:1px solid #E1E6F0;border-radius:12px;overflow:hidden;">
         <sc-for list="{{ news }}" as="item" hint-placeholder-count="7">
-          <div class="detail-newsrow" style="display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid #EEF1F8;background:{{ item.rowBg }};">
-            <span style="flex:0 0 84px;font-size:12px;color:#8A90A6;font-weight:600;font-variant-numeric:tabular-nums;">{{ item.date }}</span>
-            <span style="flex:0 0 86px;display:inline-flex;justify-content:center;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:{{ item.tagFg }};background:{{ item.tagBg }};padding:3px 0;border-radius:5px;">{{ item.tag }}</span>
-            <span style="flex:1;font-size:14px;line-height:1.4;color:#1A1A2E;font-weight:{{ item.weight }};">{{ item.title }}</span>
-            <span style="flex:0 0 auto;color:#C2C8D8;font-size:14px;">→</span>
-          </div>
+          <sc-if value="{{ item.hasLink }}">
+            <a href="{{ item.url }}" target="_blank" rel="noopener" class="detail-newsrow" style="display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid #EEF1F8;background:{{ item.rowBg }};">
+              <span style="flex:0 0 84px;font-size:12px;color:#8A90A6;font-weight:600;font-variant-numeric:tabular-nums;">{{ item.date }}</span>
+              <span style="flex:0 0 86px;display:inline-flex;justify-content:center;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:{{ item.tagFg }};background:{{ item.tagBg }};padding:3px 0;border-radius:5px;">{{ item.tag }}</span>
+              <span style="flex:1;font-size:14px;line-height:1.4;color:#1A1A2E;font-weight:{{ item.weight }};">{{ item.title }}</span>
+              <span style="flex:0 0 auto;color:#2A6FDB;font-size:14px;font-weight:700;">↗</span>
+            </a>
+          </sc-if>
+          <sc-if value="{{ item.noLink }}">
+            <div class="detail-newsrow" style="display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid #EEF1F8;background:{{ item.rowBg }};">
+              <span style="flex:0 0 84px;font-size:12px;color:#8A90A6;font-weight:600;font-variant-numeric:tabular-nums;">{{ item.date }}</span>
+              <span style="flex:0 0 86px;display:inline-flex;justify-content:center;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:{{ item.tagFg }};background:{{ item.tagBg }};padding:3px 0;border-radius:5px;">{{ item.tag }}</span>
+              <span style="flex:1;font-size:14px;line-height:1.4;color:#1A1A2E;font-weight:{{ item.weight }};">{{ item.title }}</span>
+              <span style="flex:0 0 auto;color:#E1E6F0;font-size:14px;">·</span>
+            </div>
+          </sc-if>
         </sc-for>
       </div>
     </div>
@@ -337,7 +330,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D1A73B&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { counts: [0,0,0,0], started: false, hero: 0 };
+  state = { counts: [0,0,0,0], started: false, hero: 0, scrolled: false };
 
   constructor(props){
     super(props);
@@ -363,6 +356,9 @@ class Component extends DCLogic {
   componentDidMount(){
     this.applyAccent();
     this.startRotate();
+    this.onNavScroll = ()=> this.setState({ scrolled: (window.scrollY || window.pageYOffset || 0) > 280 });
+    window.addEventListener('scroll', this.onNavScroll, { passive:true });
+    this.onNavScroll();
     const node = this.statsRef.current;
     if(!node || !('IntersectionObserver' in window)){ this.runCount(); return; }
     this.obs = new IntersectionObserver((entries)=>{
@@ -375,6 +371,7 @@ class Component extends DCLogic {
   componentDidUpdate(){ this.applyAccent(); }
 
   componentWillUnmount(){
+    if(this.onNavScroll) window.removeEventListener('scroll', this.onNavScroll);
     if(this.obs) this.obs.disconnect();
     if(this.raf) cancelAnimationFrame(this.raf);
     if(this.fallback) clearTimeout(this.fallback);
@@ -410,32 +407,42 @@ class Component extends DCLogic {
       STUDENT: { fg:'#1F6B3B', bg:'#DDF0E4' }
     };
     const rawNews = [
-      { date:'05/2023', tag:'NEW',     title:'Our research is featured in WIRED 🎉' },
-      { date:'05/2023', tag:'STUDENT', title:'Rahul Thapa named a 2023 Knight-Hennessy Scholar at Stanford!' },
-      { date:'05/2023', tag:'STUDENT', title:'Caroline Maclaren named a 2023 Fulbright Scholar!' },
-      { date:'05/2023', tag:'TALK',    title:'Xun Jiao delivered invited talks at Peking U, HKUST (GZ), and CAS/ICT.' },
-      { date:'04/2023', tag:'MEDIA',   title:'Our research is featured in Quanta Magazine.' },
-      { date:'03/2023', tag:'SERVICE', title:'Xun Jiao serves as Web Chair of ESWEEK 2023.' },
-      { date:'11/2022', tag:'AWARD',   title:'Xun Jiao receives "IEEE Young Engineer of the Year Award!"' },
-      { date:'08/2022', tag:'GRANT',   title:'Our project on "AI-based Diagnosis of Alzheimer’s" is funded by NIH!' },
-      { date:'08/2022', tag:'GRANT',   title:'Our project on "Generalizable Approximate Computing" is funded by NSF!' },
-      { date:'06/2022', tag:'GRANT',   title:'Our project on "Smart Green Environment Infrastructure" is funded by NSF!' },
-      { date:'02/2022', tag:'STUDENT', title:'Mauro Sanchirico receives College of Engineering Outstanding Graduate Student Award.' },
-      { date:'02/2022', tag:'AWARD',   title:'"Energy-Efficient Hyperdimensional Computing" at DATE 2022 is a Best Paper Candidate!' },
-      { date:'12/2021', tag:'MEDIA',   title:'Xun Jiao was interviewed by Digital Engineering Magazine.' },
-      { date:'11/2020', tag:'GRANT',   title:'Our project on "Machine Learning-based Signal Processing" is funded by L3Harris!' }
+      { date:'05/2023', tag:'NEW',     title:'Our research is featured in WIRED 🎉', url:'https://www.wired.com/story/hyperdimensional-computing-reimagines-artificial-intelligence/' },
+      { date:'05/2023', tag:'STUDENT', title:'Rahul Thapa named a 2023 Knight-Hennessy Scholar at Stanford!', url:'https://www1.villanova.edu/university/media/press-releases/2023/2023-knight-hennessy.html' },
+      { date:'05/2023', tag:'STUDENT', title:'Caroline Maclaren named a 2023 Fulbright Scholar!', url:'https://www1.villanova.edu/university/media/press-releases/2023/fulbright-grants.html' },
+      { date:'05/2023', tag:'TALK',    title:'Xun Jiao delivered invited talks at Peking U, HKUST (GZ), and CAS/ICT.', url:'' },
+      { date:'04/2023', tag:'MEDIA',   title:'Our research is featured in Quanta Magazine.', url:'https://www.quantamagazine.org/a-new-approach-to-computation-reimagines-artificial-intelligence-20230413/' },
+      { date:'03/2023', tag:'SERVICE', title:'Xun Jiao serves as Web Chair of ESWEEK 2023.', url:'https://esweek.org' },
+      { date:'11/2022', tag:'AWARD',   title:'Xun Jiao receives "IEEE Young Engineer of the Year Award!"', url:'' },
+      { date:'08/2022', tag:'GRANT',   title:'Our project on "AI-based Diagnosis of Alzheimer’s" is funded by NIH!', url:'https://reporter.nih.gov/search/T7r_s80tVUWcSrCg0doxWA/project-details/10438005' },
+      { date:'08/2022', tag:'GRANT',   title:'Our project on "Generalizable Approximate Computing" is funded by NSF!', url:'https://www.nsf.gov/awardsearch/showAward?AWD_ID=2202310' },
+      { date:'06/2022', tag:'GRANT',   title:'Our project on "Smart Green Environment Infrastructure" is funded by NSF!', url:'https://www.nsf.gov/awardsearch/showAward?AWD_ID=2152834' },
+      { date:'02/2022', tag:'STUDENT', title:'Mauro Sanchirico receives College of Engineering Outstanding Graduate Student Award.', url:'' },
+      { date:'02/2022', tag:'AWARD',   title:'"Energy-Efficient Hyperdimensional Computing" at DATE 2022 is a Best Paper Candidate!', url:'https://www.date-conference.com/' },
+      { date:'12/2021', tag:'MEDIA',   title:'Xun Jiao was interviewed by Digital Engineering Magazine.', url:'https://www.digitalengineering247.com/article/the-coming-of-age-of-ai-and-machine-learning-in-design/fea' },
+      { date:'11/2020', tag:'GRANT',   title:'Our project on "Machine Learning-based Signal Processing" is funded by L3Harris!', url:'https://www1.villanova.edu/content/villanova/engineering/newsevents/newsarchives/2020/faculty-research/CAC-industry-contract.html' }
     ];
     const news = rawNews.map(n=>{
       const t = TAG[n.tag] || TAG.PAPER;
       const isNew = n.tag === 'NEW';
-      return { ...n, tagFg:t.fg, tagBg:t.bg, rowBg: isNew ? '#FFF5F6' : '#fff', weight: isNew ? 700 : 500 };
+      const hasLink = !!(n.url && n.url.length);
+      return { ...n, tagFg:t.fg, tagBg:t.bg, rowBg: isNew ? '#FFF5F6' : '#fff', weight: isNew ? 700 : 500, hasLink, noLink:!hasLink };
     });
 
     const h = this.state.hero;
     const accent = this.props.accent || '#D1A73B';
     const dotW = (i)=> h===i ? '24px' : '7px';
     const dotBg = (i)=> h===i ? accent : 'rgba(255,255,255,.45)';
+    const sc = this.state.scrolled;
+    const navBg = sc ? 'rgba(255,255,255,.92)' : 'rgba(255,255,255,0)';
+    const navBlur = sc ? 'saturate(180%) blur(12px)' : 'none';
+    const navBorder = sc ? '1px solid #E7EAF3' : '1px solid rgba(255,255,255,0)';
+    const navBrand = sc ? '#003087' : '#ffffff';
+    const navSub = sc ? '#8A90A6' : 'rgba(255,255,255,.82)';
+    const navLink = sc ? '#5A6079' : 'rgba(255,255,255,.92)';
+    const navHome = sc ? '#003087' : '#ffffff';
     return {
+      navBg, navBlur, navBorder, navBrand, navSub, navLink, navHome,
       rootRef:this.rootRef, statsRef:this.statsRef, stats, news,
       heroAOp: h===0?1:0, heroAZ: h===0?10:1, heroAPe: h===0?'auto':'none',
       heroBOp: h===1?1:0, heroBZ: h===1?10:1, heroBPe: h===1?'auto':'none',
