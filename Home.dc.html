@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#1A1A2E;background:#fff;-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  @keyframes detailDrift1{0%{transform:translate(0,0)}50%{transform:translate(22px,-16px)}100%{transform:translate(0,0)}}
+  @keyframes detailDrift2{0%{transform:translate(0,0)}50%{transform:translate(-18px,14px)}100%{transform:translate(0,0)}}
+  @keyframes detailDrift3{0%{transform:translate(0,0)}50%{transform:translate(12px,18px)}100%{transform:translate(0,0)}}
+  @keyframes detailPulse{0%,100%{opacity:.20}50%{opacity:.55}}
+  .detail-pillar{transition:transform .2s ease, box-shadow .2s ease;}
+  .detail-pillar:hover{transform:translateY(-4px);box-shadow:0 18px 38px -20px rgba(0,48,135,.5);}
+  .detail-cta-primary{transition:transform .15s ease, box-shadow .2s ease;}
+  .detail-cta-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(209,167,59,.6);}
+  .detail-cta-ghost{transition:background .2s ease,border-color .2s ease;}
+  .detail-cta-ghost:hover{background:rgba(255,255,255,.10);border-color:#fff;}
+  .detail-navlink{transition:color .18s ease;}
+  .detail-navlink:hover{color:#003087;}
+  .detail-gimg{transition:transform .5s ease;}
+  .detail-gcell:hover .detail-gimg{transform:scale(1.05);}
+  .detail-dot{transition:width .3s ease, background .3s ease;cursor:pointer;}
+  .detail-newsrow{transition:background .15s ease;}
+  .detail-newsrow:hover{background:#F4F7FD;}
+  .detail-navlinks{scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .detail-navlinks::-webkit-scrollbar{display:none;}
+  .detail-navlinks a{flex:0 0 auto;}
+  @media (max-width:680px){
+    .detail-brand-sub{display:none!important;}
+    .detail-navlinks{gap:18px!important;justify-content:flex-start!important;padding-left:12px!important;}
+    .detail-hero-h1{font-size:30px!important;}
+    .detail-stats-num{font-size:24px!important;}
+    .detail-pillars{grid-template-columns:repeat(2,1fr)!important;}
+    .detail-statgrid{grid-template-columns:repeat(2,1fr)!important;row-gap:14px!important;}
+  }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="min-height:100vh;background:#fff;">
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid #E7EAF3;">
+    <nav style="max-width:1080px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;gap:16px;">
+      <a href="Home.dc.html" style="display:flex;align-items:center;gap:11px;flex:0 0 auto;">
+        <span style="display:inline-flex;width:36px;height:36px;border-radius:50%;background:#003087;align-items:center;justify-content:center;border:2px solid var(--accent,#D1A73B);flex:0 0 auto;">
+          <span style="font-family:'Newsreader',Georgia,serif;font-weight:600;color:#fff;font-size:20px;line-height:1;">V</span>
+        </span>
+        <span style="display:flex;flex-direction:column;line-height:1;">
+          <span style="font-weight:800;letter-spacing:.05em;color:#003087;font-size:17px;">DETAIL <span style="color:var(--accent,#D1A73B);">LAB</span></span>
+          <span class="detail-brand-sub" style="font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A90A6;font-weight:600;margin-top:3px;white-space:nowrap;">Villanova University · ECE</span>
+        </span>
+      </a>
+      <div class="detail-navlinks" style="display:flex;align-items:center;gap:26px;font-size:14px;font-weight:500;overflow-x:auto;min-width:0;flex:1;justify-content:flex-end;white-space:nowrap;">
+        <a class="detail-navlink" href="Home.dc.html" style="color:#003087;font-weight:700;">Home</a>
+        <a class="detail-navlink" href="Research.dc.html" style="color:#5A6079;">Research</a>
+        <a class="detail-navlink" href="PaperReading.dc.html" style="color:#5A6079;display:flex;align-items:center;gap:5px;">Paper Reading <span style="color:var(--accent,#D1A73B);">★</span></a>
+        <a class="detail-navlink" href="Publications.dc.html" style="color:#5A6079;">Publications</a>
+        <a class="detail-navlink" href="People.dc.html" style="color:#5A6079;">People</a>
+        <a class="detail-navlink" href="Artifacts.dc.html" style="color:#5A6079;">Artifacts</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ROTATING HERO (compact) -->
+  <section style="position:relative;height:340px;background:#003087;overflow:hidden;">
+
+    <!-- HERO A: Topology -->
+    <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroAOp }};z-index:{{ heroAZ }};pointer-events:{{ heroAPe }};background:#003087;color:#fff;overflow:hidden;">
+      <svg viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.9;" aria-hidden="true">
+        <g stroke="#ffffff" stroke-width="1" fill="none" opacity=".22" style="animation:detailDrift2 26s ease-in-out infinite;">
+          <line x1="120" y1="60" x2="320" y2="140"/><line x1="320" y1="140" x2="240" y2="280"/><line x1="320" y1="140" x2="520" y2="90"/><line x1="520" y1="90" x2="700" y2="180"/><line x1="700" y1="180" x2="900" y2="110"/><line x1="900" y1="110" x2="1060" y2="230"/><line x1="240" y1="280" x2="460" y2="310"/><line x1="700" y1="180" x2="760" y2="320"/><line x1="900" y1="110" x2="1040" y2="50"/>
+        </g>
+        <g style="animation:detailDrift1 22s ease-in-out infinite;">
+          <circle cx="120" cy="60" r="4" fill="#D1A73B" style="animation:detailPulse 6s ease-in-out infinite;"/><circle cx="320" cy="140" r="6" fill="#ffffff" opacity=".5" style="animation:detailPulse 7s ease-in-out infinite .5s;"/><circle cx="520" cy="90" r="4" fill="#ffffff" opacity=".4"/><circle cx="700" cy="180" r="7" fill="#D1A73B" style="animation:detailPulse 8s ease-in-out infinite 1s;"/><circle cx="900" cy="110" r="5" fill="#ffffff" opacity=".5"/>
+        </g>
+        <g style="animation:detailDrift3 30s ease-in-out infinite;">
+          <circle cx="240" cy="280" r="5" fill="#ffffff" opacity=".4"/><circle cx="460" cy="310" r="4" fill="#D1A73B" opacity=".8"/><circle cx="760" cy="320" r="6" fill="#ffffff" opacity=".45"/><circle cx="1060" cy="230" r="5" fill="#D1A73B" opacity=".7"/><circle cx="1040" cy="50" r="4" fill="#ffffff" opacity=".4"/>
+        </g>
+      </svg>
+      <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(0,32,90,.82) 0%,rgba(0,48,135,.55) 55%,rgba(0,48,135,.25) 100%);"></div>
+      <div style="position:relative;max-width:1080px;margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:14px;"><span style="width:22px;height:1px;background:var(--accent,#D1A73B);display:inline-block;"></span>Villanova University · ECE</div>
+        <h1 class="detail-hero-h1" style="max-width:760px;font-size:40px;line-height:1.08;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance;">Dependable, Efficient &amp; Intelligent Computing</h1>
+        <p style="max-width:600px;font-size:17px;line-height:1.45;color:#C9D4EC;margin:0 0 22px;">Cross-layer AI/ML systems research: <strong style="color:#fff;font-weight:600;">robust, efficient, brain-inspired.</strong> 🧠</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+          <a class="detail-cta-primary" href="Research.dc.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent,#D1A73B);color:#1A1A2E;font-weight:700;font-size:14px;padding:11px 20px;border-radius:9px;">Explore Research →</a>
+          <a class="detail-cta-ghost" href="People.dc.html" style="display:inline-flex;align-items:center;border:1.5px solid rgba(255,255,255,.45);color:#fff;font-weight:600;font-size:14px;padding:11px 20px;border-radius:9px;">Meet the Team</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO B: Split panel -->
+    <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroBOp }};z-index:{{ heroBZ }};pointer-events:{{ heroBPe }};display:grid;grid-template-columns:1.15fr .85fr;">
+      <div style="background:#003087;color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 28px;">
+        <div style="max-width:520px;margin-left:auto;width:100%;padding-left:max(0px,calc((100vw - 1080px)/2));">
+          <div style="font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:12px;">DETAIL Lab · Villanova ECE</div>
+          <h1 class="detail-hero-h1" style="font-size:36px;line-height:1.08;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;">Engineering AI you can <span style="color:var(--accent,#D1A73B);">depend</span> on.</h1>
+          <p style="font-size:16px;line-height:1.45;color:#C9D4EC;margin:0 0 22px;max-width:420px;">Robust, efficient, brain-inspired systems — from silicon faults to large models. ⚡</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a class="detail-cta-primary" href="Research.dc.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent,#D1A73B);color:#1A1A2E;font-weight:700;font-size:14px;padding:11px 20px;border-radius:9px;">Explore Research →</a>
+            <a class="detail-cta-ghost" href="Publications.dc.html" style="display:inline-flex;align-items:center;border:1.5px solid rgba(255,255,255,.45);color:#fff;font-weight:600;font-size:14px;padding:11px 20px;border-radius:9px;">Publications</a>
+          </div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(160deg,#0A1F4E,#06163A);position:relative;overflow:hidden;">
+        <svg viewBox="0 0 520 340" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;" aria-hidden="true">
+          <g stroke="var(--accent,#D1A73B)" stroke-width="1.4" fill="none" opacity=".55" style="animation:detailDrift1 24s ease-in-out infinite;">
+            <path d="M60 80 H220 V160 H380"/><path d="M60 200 H180 V260 H440"/><path d="M280 50 V130 H480"/><path d="M120 300 H320 V230"/>
+          </g>
+          <g fill="var(--accent,#D1A73B)" style="animation:detailDrift3 28s ease-in-out infinite;">
+            <circle cx="60" cy="80" r="5"/><circle cx="220" cy="160" r="5"/><circle cx="380" cy="160" r="6" style="animation:detailPulse 5s infinite;"/><circle cx="60" cy="200" r="5"/><circle cx="440" cy="260" r="5"/><circle cx="280" cy="50" r="5"/><circle cx="480" cy="130" r="6"/><circle cx="320" cy="230" r="5"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- HERO C: Editorial mono -->
+    <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroCOp }};z-index:{{ heroCZ }};pointer-events:{{ heroCPe }};background:#F7F8FB;color:#1A1A2E;overflow:hidden;">
+      <svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;right:0;width:44%;height:100%;opacity:.55;" aria-hidden="true">
+        <g stroke="#003087" stroke-width="1" fill="none" opacity=".3" style="animation:detailDrift2 26s ease-in-out infinite;"><line x1="90" y1="60" x2="330" y2="160"/><line x1="330" y1="160" x2="240" y2="300"/><line x1="330" y1="160" x2="540" y2="100"/><line x1="540" y1="100" x2="480" y2="280"/></g>
+        <g fill="var(--accent,#D1A73B)" style="animation:detailDrift1 22s ease-in-out infinite;"><circle cx="90" cy="60" r="5"/><circle cx="330" cy="160" r="8"/><circle cx="540" cy="100" r="5"/><circle cx="240" cy="300" r="5"/><circle cx="480" cy="280" r="6"/></g>
+      </svg>
+      <div style="position:relative;max-width:1080px;margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
+        <div style="width:46px;height:4px;background:var(--accent,#D1A73B);margin-bottom:16px;border-radius:2px;"></div>
+        <h1 class="detail-hero-h1" style="font-family:'Newsreader',Georgia,serif;font-size:46px;line-height:1.04;font-weight:600;letter-spacing:-.02em;margin:0 0 10px;color:#003087;max-width:680px;text-wrap:balance;">Dependable, Efficient &amp; Intelligent Computing.</h1>
+        <p style="font-size:17px;color:#5A6079;margin:0 0 22px;max-width:440px;line-height:1.45;">Cross-layer AI/ML systems research at Villanova ECE. 🔬</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="detail-cta-primary" href="Research.dc.html" style="display:inline-flex;align-items:center;gap:8px;background:#003087;color:#fff;font-weight:700;font-size:14px;padding:11px 20px;border-radius:9px;">Explore Research →</a>
+          <a href="People.dc.html" style="display:inline-flex;align-items:center;border:1.5px solid #003087;color:#003087;font-weight:600;font-size:14px;padding:11px 20px;border-radius:9px;">Meet the Team</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO D: Lab photo -->
+    <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroDOp }};z-index:{{ heroDZ }};pointer-events:{{ heroDPe }};background:#0A1430;overflow:hidden;">
+      <img src="assets/lab-group-four.jpg" alt="DETAIL Lab group" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;position:absolute;inset:0;display:block;"/>
+      <div style="position:absolute;inset:0;background:linear-gradient(95deg,rgba(0,24,68,.92) 0%,rgba(0,32,90,.66) 42%,rgba(0,32,90,.12) 100%);"></div>
+      <div style="position:relative;max-width:1080px;margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;color:#fff;">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:14px;">🎓 Life in the Lab</div>
+        <h1 class="detail-hero-h1" style="max-width:600px;font-size:38px;line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;">A community that ships research — and celebrates together.</h1>
+        <p style="max-width:500px;font-size:16px;line-height:1.45;color:#D6DFF2;margin:0 0 22px;">Ten researchers across hardware, ML, and systems. 🥂</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="detail-cta-primary" href="People.dc.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent,#D1A73B);color:#1A1A2E;font-weight:700;font-size:14px;padding:11px 20px;border-radius:9px;">Meet the Team →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOTS -->
+    <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:8px;align-items:center;">
+      <span class="detail-dot" onClick="{{ goHero0 }}" style="height:7px;border-radius:5px;width:{{ dot0w }};background:{{ dot0bg }};"></span>
+      <span class="detail-dot" onClick="{{ goHero1 }}" style="height:7px;border-radius:5px;width:{{ dot1w }};background:{{ dot1bg }};"></span>
+      <span class="detail-dot" onClick="{{ goHero2 }}" style="height:7px;border-radius:5px;width:{{ dot2w }};background:{{ dot2bg }};"></span>
+      <span class="detail-dot" onClick="{{ goHero3 }}" style="height:7px;border-radius:5px;width:{{ dot3w }};background:{{ dot3bg }};"></span>
+    </div>
+  </section>
+
+  <!-- STATS strip (deeper navy + gold seam, compact) -->
+  <section ref="{{ statsRef }}" style="background:#003087;border-top:3px solid var(--accent,#D1A73B);">
+    <div class="detail-statgrid" style="max-width:1080px;margin:0 auto;padding:14px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+      <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:1px;border-left:3px solid var(--accent,#D1A73B);padding-left:12px;">
+          <div class="detail-stats-num" style="font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.05;display:flex;align-items:baseline;">{{ stat.display }}<span style="color:var(--accent,#D1A73B);">{{ stat.suffix }}</span></div>
+          <div style="font-size:11.5px;color:#A9BBDD;font-weight:500;">{{ stat.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- LATEST NEWS — dense list -->
+  <section style="background:#fff;">
+    <div style="max-width:1080px;margin:0 auto;padding:40px 28px 30px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;">
+        <h2 style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin:0;color:#1A1A2E;display:flex;align-items:center;gap:9px;"><span style="color:#C8102E;">📣</span> Latest News &amp; Updates</h2>
+        <a href="#" style="font-size:13px;font-weight:600;color:#003087;">View archive →</a>
+      </div>
+      <div style="border:1px solid #E1E6F0;border-radius:12px;overflow:hidden;">
+        <sc-for list="{{ news }}" as="item" hint-placeholder-count="7">
+          <div class="detail-newsrow" style="display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid #EEF1F8;background:{{ item.rowBg }};">
+            <span style="flex:0 0 84px;font-size:12px;color:#8A90A6;font-weight:600;font-variant-numeric:tabular-nums;">{{ item.date }}</span>
+            <span style="flex:0 0 86px;display:inline-flex;justify-content:center;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:{{ item.tagFg }};background:{{ item.tagBg }};padding:3px 0;border-radius:5px;">{{ item.tag }}</span>
+            <span style="flex:1;font-size:14px;line-height:1.4;color:#1A1A2E;font-weight:{{ item.weight }};">{{ item.title }}</span>
+            <span style="flex:0 0 auto;color:#C2C8D8;font-size:14px;">→</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH PILLARS -->
+  <section style="background:#F8F9FA;">
+    <div style="max-width:1080px;margin:0 auto;padding:46px 28px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:24px;">
+        <h2 style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin:0;color:#1A1A2E;">Research Pillars</h2>
+        <a href="Research.dc.html" style="font-size:13px;font-weight:600;color:#003087;">All research areas →</a>
+      </div>
+      <div class="detail-pillars" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+        <a class="detail-pillar" href="Research.dc.html" style="display:flex;flex-direction:column;background:#fff;border:1px solid #E1E6F0;border-top:4px solid #003087;border-radius:14px;padding:20px;overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="display:inline-flex;width:34px;height:34px;border-radius:9px;background:#EAF0FB;color:#003087;font-weight:800;font-size:13px;align-items:center;justify-content:center;">01</span>
+            <span style="font-size:20px;line-height:1;">🛡️</span>
+          </div>
+          <h3 style="font-size:15.5px;font-weight:700;margin:0 0 6px;line-height:1.25;color:#1A1A2E;">Robust &amp; Resilient AI</h3>
+          <p style="font-size:13px;line-height:1.5;color:#5A6079;margin:0;">Defending models against hardware faults &amp; adversarial inputs.</p>
+        </a>
+        <a class="detail-pillar" href="Research.dc.html" style="display:flex;flex-direction:column;background:#fff;border:1px solid #E1E6F0;border-top:4px solid #2A6FDB;border-radius:14px;padding:20px;overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="display:inline-flex;width:34px;height:34px;border-radius:9px;background:#E7F0FE;color:#2A6FDB;font-weight:800;font-size:13px;align-items:center;justify-content:center;">02</span>
+            <span style="font-size:20px;line-height:1;">⚡</span>
+          </div>
+          <h3 style="font-size:15.5px;font-weight:700;margin:0 0 6px;line-height:1.25;color:#1A1A2E;">HW Reliability &amp; Approx. Computing</h3>
+          <p style="font-size:13px;line-height:1.5;color:#5A6079;margin:0;">Energy–accuracy tradeoffs. Projects: DEVoT, LEVAX.</p>
+        </a>
+        <a class="detail-pillar" href="Research.dc.html" style="display:flex;flex-direction:column;background:#fff;border:1px solid #E1E6F0;border-top:4px solid #0E8A7A;border-radius:14px;padding:20px;overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="display:inline-flex;width:34px;height:34px;border-radius:9px;background:#E1F4F0;color:#0E8A7A;font-weight:800;font-size:13px;align-items:center;justify-content:center;">03</span>
+            <span style="font-size:20px;line-height:1;">🐛</span>
+          </div>
+          <h3 style="font-size:15.5px;font-weight:700;margin:0 0 6px;line-height:1.25;color:#1A1A2E;">Fuzz Testing</h3>
+          <p style="font-size:13px;line-height:1.5;color:#5A6079;margin:0;">Finding bugs across HW, AI, SW &amp; firmware.</p>
+        </a>
+        <a class="detail-pillar" href="Research.dc.html" style="display:flex;flex-direction:column;background:#FBF5E6;border:1px solid #EAD9A8;border-top:4px solid #C79A3A;border-radius:14px;padding:20px;overflow:hidden;position:relative;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="display:inline-flex;width:34px;height:34px;border-radius:9px;background:#003087;color:#fff;font-weight:800;font-size:13px;align-items:center;justify-content:center;">04</span>
+              <span style="font-size:20px;line-height:1;">🧠</span>
+            </div>
+            <span style="font-size:9.5px;font-weight:800;letter-spacing:.06em;color:#fff;background:#003087;padding:3px 8px;border-radius:20px;white-space:nowrap;">★ FEATURED</span>
+          </div>
+          <h3 style="font-size:15.5px;font-weight:700;margin:0 0 6px;line-height:1.25;color:#1A1A2E;">Brain-Inspired HDC</h3>
+          <p style="font-size:13px;line-height:1.5;color:#5A5132;margin:0;">Hyperdimensional computing — WIRED-featured, drug discovery, NLP.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIFE IN THE LAB -->
+  <section style="background:#fff;">
+    <div style="max-width:1080px;margin:0 auto;padding:46px 28px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
+        <h2 style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin:0;color:#1A1A2E;">🎓 Life in the Lab</h2>
+        <p style="font-size:13px;color:#8A90A6;font-weight:500;">Commencement &amp; milestones across the DETAIL family.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1.25fr 1fr 1fr;grid-template-rows:auto auto;gap:12px;">
+        <div class="detail-gcell" style="grid-row:span 2;position:relative;border-radius:14px;overflow:hidden;background:#0A1430;min-height:340px;">
+          <img class="detail-gimg" src="assets/lab-commencement.jpg" alt="DETAIL Lab members at Villanova commencement" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,48,.78),transparent 55%);"></div>
+          <div style="position:absolute;left:18px;bottom:16px;color:#fff;">
+            <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent,#D1A73B);margin-bottom:4px;">Commencement</div>
+            <div style="font-size:15px;font-weight:700;">Hooding ceremony 🎓</div>
+          </div>
+        </div>
+        <div class="detail-gcell" style="position:relative;border-radius:14px;overflow:hidden;background:#0A1430;min-height:164px;">
+          <img class="detail-gimg" src="assets/lab-grads-duo.jpg" alt="Two DETAIL Lab graduates" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"/>
+        </div>
+        <div class="detail-gcell" style="position:relative;border-radius:14px;overflow:hidden;background:#0A1430;min-height:164px;">
+          <img class="detail-gimg" src="assets/lab-grads-thumbsup.jpg" alt="DETAIL Lab graduates celebrating" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"/>
+        </div>
+        <div class="detail-gcell" style="grid-column:span 2;position:relative;border-radius:14px;overflow:hidden;background:#0A1430;min-height:164px;">
+          <img class="detail-gimg" src="assets/lab-group-four.jpg" alt="DETAIL Lab group photo" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;object-position:center 30%;"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,48,.6),transparent 60%);"></div>
+          <div style="position:absolute;left:18px;bottom:14px;color:#fff;font-size:14px;font-weight:700;">The crew, post-defense 🥂</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDIA FEATURES -->
+  <section style="background:#003087;color:#fff;">
+    <div style="max-width:1080px;margin:0 auto;padding:26px 28px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;">
+      <span style="font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#9FB4DC;">Featured in</span>
+      <div style="display:flex;align-items:center;gap:30px;flex-wrap:wrap;justify-content:center;font-weight:700;font-size:18px;color:#fff;">
+        <span style="font-style:italic;font-weight:800;">WIRED</span>
+        <span style="opacity:.85;">Quanta <span style="font-weight:400;opacity:.7;">Magazine</span></span>
+        <span style="opacity:.85;font-size:16px;">Digital Engineering</span>
+        <span style="opacity:.85;font-size:16px;display:flex;align-items:center;gap:7px;"><span style="color:var(--accent,#D1A73B);">★</span>Congressional Presentation 2020</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#0A1430;color:#C9D4EC;">
+    <div style="max-width:1080px;margin:0 auto;padding:40px 28px 30px;display:flex;flex-wrap:wrap;gap:36px;justify-content:space-between;">
+      <div style="max-width:340px;">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+          <span style="display:inline-flex;width:38px;height:38px;border-radius:50%;background:#fff;align-items:center;justify-content:center;border:2px solid var(--accent,#D1A73B);">
+            <span style="font-family:'Newsreader',Georgia,serif;font-weight:600;color:#003087;font-size:21px;line-height:1;">V</span>
+          </span>
+          <div style="display:flex;flex-direction:column;line-height:1.1;">
+            <span style="color:#fff;font-weight:800;letter-spacing:.05em;font-size:16px;">DETAIL LAB</span>
+            <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7E8CB0;font-weight:600;margin-top:3px;">Villanova University</span>
+          </div>
+        </div>
+        <p style="font-size:13px;line-height:1.6;margin:0;color:#9FB4DC;">Dependable, Efficient, and Intelligent Computing Lab. Dept. of Electrical &amp; Computer Engineering, Villanova University. 💙💛</p>
+      </div>
+      <div style="display:flex;gap:48px;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:13px;">
+          <span style="color:#fff;font-weight:700;margin-bottom:3px;">Explore</span>
+          <a class="detail-navlink" href="Research.dc.html" style="color:#9FB4DC;">Research</a>
+          <a class="detail-navlink" href="Publications.dc.html" style="color:#9FB4DC;">Publications</a>
+          <a class="detail-navlink" href="PaperReading.dc.html" style="color:#9FB4DC;">Paper Reading</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:13px;">
+          <span style="color:#fff;font-weight:700;margin-bottom:3px;">Contact</span>
+          <a href="mailto:xun.jiao@villanova.edu" style="color:#9FB4DC;">xun.jiao@villanova.edu</a>
+          <a href="https://vu-detail.github.io" style="color:#9FB4DC;">vu-detail.github.io</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.08);">
+      <div style="max-width:1080px;margin:0 auto;padding:16px 28px;font-size:12px;color:#6B7BA3;">© 2026 DETAIL Lab · Villanova University</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D1A73B&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { counts: [0,0,0,0], started: false, hero: 0 };
+
+  constructor(props){
+    super(props);
+    this.rootRef = React.createRef();
+    this.statsRef = React.createRef();
+    this.targets = [44, 6, 7, 10];
+    this.HERO_COUNT = 4;
+  }
+
+  applyAccent(){
+    const el = this.rootRef.current;
+    if(el) el.style.setProperty('--accent', this.props.accent || '#D1A73B');
+  }
+
+  startRotate(){
+    if(this.rot) clearInterval(this.rot);
+    this.rot = setInterval(()=> this.setState(s=>({ hero:(s.hero+1)%this.HERO_COUNT })), 6500);
+  }
+  goHero(i){ this.setState({ hero:i }); this.startRotate(); }
+
+  componentDidMount(){
+    this.applyAccent();
+    this.startRotate();
+    const node = this.statsRef.current;
+    if(!node || !('IntersectionObserver' in window)){ this.runCount(); return; }
+    this.obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting && !this.state.started){ this.runCount(); } });
+    }, { threshold: .3 });
+    this.obs.observe(node);
+    this.fallback = setTimeout(()=>{ if(!this.state.started) this.runCount(); }, 700);
+  }
+
+  componentDidUpdate(){ this.applyAccent(); }
+
+  componentWillUnmount(){
+    if(this.obs) this.obs.disconnect();
+    if(this.raf) cancelAnimationFrame(this.raf);
+    if(this.fallback) clearTimeout(this.fallback);
+    if(this.rot) clearInterval(this.rot);
+  }
+
+  runCount(){
+    if(this.state.started) return;
+    this.setState({ started:true });
+    const dur = 1400, t0 = performance.now();
+    const tick = (now)=>{
+      const p = Math.min(1,(now-t0)/dur);
+      const e = 1 - Math.pow(1-p,3);
+      this.setState({ counts: this.targets.map(t=>Math.round(t*e)) });
+      if(p<1) this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+
+  renderVals(){
+    const labels = ['Papers','NSF / NIH Grants','Best Paper Awards','Lab Members'];
+    const suffix = ['','','+','+'];
+    const stats = this.targets.map((t,i)=>({ display:String(this.state.counts[i]), suffix:suffix[i], label:labels[i] }));
+
+    const TAG = {
+      NEW:    { fg:'#fff',    bg:'#C8102E' },
+      PAPER:  { fg:'#003087', bg:'#E3EAF8' },
+      AWARD:  { fg:'#8A6A1E', bg:'#F6ECCF' },
+      GRANT:  { fg:'#1F6B3B', bg:'#DDF0E4' },
+      TALK:   { fg:'#5A3FA0', bg:'#EAE3F7' },
+      MEDIA:  { fg:'#B23A00', bg:'#FBE6DA' }
+    };
+    const rawNews = [
+      { date:'May 2026', tag:'NEW',   title:'Two papers accepted at ICML 2026 on fault-tolerant inference 🎉' },
+      { date:'Apr 2026', tag:'AWARD', title:'Prof. Jiao named Associate Editor of IEEE TCAD' },
+      { date:'Mar 2026', tag:'GRANT', title:'New NSF award to advance hyperdimensional computing for genomics' },
+      { date:'Feb 2026', tag:'NEW',   title:'Best Paper Award at DATE 2026 for resilient DNN accelerator design 🏆' },
+      { date:'Jan 2026', tag:'PAPER', title:'MoleHD extension published in Nature Communications' },
+      { date:'Dec 2025', tag:'TALK',  title:'Invited keynote on brain-inspired computing at ASP-DAC' },
+      { date:'Nov 2025', tag:'MEDIA', title:'Lab research on hyperdimensional computing featured in WIRED' }
+    ];
+    const news = rawNews.map(n=>{
+      const t = TAG[n.tag] || TAG.PAPER;
+      const isNew = n.tag === 'NEW';
+      return { ...n, tagFg:t.fg, tagBg:t.bg, rowBg: isNew ? '#FFF5F6' : '#fff', weight: isNew ? 700 : 500 };
+    });
+
+    const h = this.state.hero;
+    const accent = this.props.accent || '#D1A73B';
+    const dotW = (i)=> h===i ? '24px' : '7px';
+    const dotBg = (i)=> h===i ? accent : 'rgba(255,255,255,.45)';
+    return {
+      rootRef:this.rootRef, statsRef:this.statsRef, stats, news,
+      heroAOp: h===0?1:0, heroAZ: h===0?10:1, heroAPe: h===0?'auto':'none',
+      heroBOp: h===1?1:0, heroBZ: h===1?10:1, heroBPe: h===1?'auto':'none',
+      heroCOp: h===2?1:0, heroCZ: h===2?10:1, heroCPe: h===2?'auto':'none',
+      heroDOp: h===3?1:0, heroDZ: h===3?10:1, heroDPe: h===3?'auto':'none',
+      dot0w:dotW(0), dot1w:dotW(1), dot2w:dotW(2), dot3w:dotW(3),
+      dot0bg:dotBg(0), dot1bg:dotBg(1), dot2bg:dotBg(2), dot3bg:dotBg(3),
+      goHero0:()=>this.goHero(0), goHero1:()=>this.goHero(1), goHero2:()=>this.goHero(2), goHero3:()=>this.goHero(3)
+    };
+  }
+}
+</script>
+</body>
+</html>

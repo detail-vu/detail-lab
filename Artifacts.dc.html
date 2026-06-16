@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#1A1A2E;background:#F4F6FA;-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  .detail-navlink{transition:color .18s ease;}
+  .detail-navlink:hover{color:#003087;}
+  .detail-navlinks{scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .detail-navlinks::-webkit-scrollbar{display:none;}
+  .detail-navlinks a{flex:0 0 auto;}
+  .detail-art{transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;}
+  .detail-art:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(0,48,135,.4);border-color:#C9D6EC;}
+  .detail-filter{transition:background .15s ease, color .15s ease, border-color .15s ease;cursor:pointer;}
+  @media (max-width:680px){
+    .detail-brand-sub{display:none!important;}
+    .detail-navlinks{gap:18px!important;justify-content:flex-start!important;}
+    .detail-h1{font-size:30px!important;}
+    .detail-artgrid{grid-template-columns:1fr!important;}
+  }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#F4F6FA;">
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid #E7EAF3;">
+    <nav style="max-width:1080px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;gap:16px;">
+      <a href="Home.dc.html" style="display:flex;align-items:center;gap:11px;flex:0 0 auto;">
+        <span style="display:inline-flex;width:36px;height:36px;border-radius:50%;background:#003087;align-items:center;justify-content:center;border:2px solid #D1A73B;flex:0 0 auto;"><span style="font-family:'Newsreader',Georgia,serif;font-weight:600;color:#fff;font-size:20px;line-height:1;">V</span></span>
+        <span style="display:flex;flex-direction:column;line-height:1;">
+          <span style="font-weight:800;letter-spacing:.05em;color:#003087;font-size:17px;">DETAIL <span style="color:#D1A73B;">LAB</span></span>
+          <span class="detail-brand-sub" style="font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A90A6;font-weight:600;margin-top:3px;white-space:nowrap;">Villanova University · ECE</span>
+        </span>
+      </a>
+      <div class="detail-navlinks" style="display:flex;align-items:center;gap:26px;font-size:14px;font-weight:500;overflow-x:auto;min-width:0;flex:1;justify-content:flex-end;white-space:nowrap;">
+        <a class="detail-navlink" href="Home.dc.html" style="color:#5A6079;">Home</a>
+        <a class="detail-navlink" href="Research.dc.html" style="color:#5A6079;">Research</a>
+        <a class="detail-navlink" href="PaperReading.dc.html" style="color:#5A6079;display:flex;align-items:center;gap:5px;">Paper Reading <span style="color:#D1A73B;">★</span></a>
+        <a class="detail-navlink" href="Publications.dc.html" style="color:#5A6079;">Publications</a>
+        <a class="detail-navlink" href="People.dc.html" style="color:#5A6079;">People</a>
+        <a class="detail-navlink" href="Artifacts.dc.html" style="color:#003087;font-weight:700;">Artifacts</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <section style="background:#003087;color:#fff;border-bottom:3px solid #D1A73B;">
+    <div style="max-width:1080px;margin:0 auto;padding:40px 28px 44px;">
+      <div style="font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#D1A73B;margin-bottom:12px;">Artifacts</div>
+      <h1 class="detail-h1" style="font-size:38px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;line-height:1.1;">Open code, data &amp; tools</h1>
+      <p style="font-size:16px;line-height:1.5;color:#C9D4EC;margin:0;max-width:620px;">Reproducible research artifacts from our papers — repositories, datasets, and tooling. 🧰</p>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section style="background:#F4F6FA;border-bottom:1px solid #E7EAF3;">
+    <div style="max-width:1080px;margin:0 auto;padding:16px 28px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
+      <sc-for list="{{ kindChips }}" as="chip" hint-placeholder-count="4">
+        <span class="detail-filter" onClick="{{ chip.onClick }}" style="font-size:12px;font-weight:700;padding:7px 13px;border-radius:9px;color:{{ chip.fg }};background:{{ chip.bg }};border:1px solid {{ chip.bd }};">{{ chip.label }}</span>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- GRID -->
+  <section style="background:#F4F6FA;">
+    <div style="max-width:1080px;margin:0 auto;padding:24px 28px 56px;">
+      <div class="detail-artgrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+        <sc-for list="{{ artifacts }}" as="a" hint-placeholder-count="6">
+          <a href="{{ a.url }}" target="_blank" class="detail-art" style="display:flex;flex-direction:column;background:#fff;border:1px solid #E1E6F0;border-top:4px solid {{ a.accent }};border-radius:14px;padding:22px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:11px;">
+                <span style="width:42px;height:42px;border-radius:11px;background:{{ a.iconBg }};display:flex;align-items:center;justify-content:center;font-size:22px;">{{ a.icon }}</span>
+                <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:{{ a.kindFg }};background:{{ a.kindBg }};padding:3px 10px;border-radius:20px;">{{ a.kindLabel }}</span>
+              </div>
+              <sc-if value="{{ a.featured }}"><span style="color:#D1A73B;font-size:16px;">★</span></sc-if>
+            </div>
+            <h3 style="font-size:16.5px;font-weight:800;margin:0 0 6px;color:#1A1A2E;letter-spacing:-.01em;">{{ a.name }}</h3>
+            <p style="font-size:13px;line-height:1.55;color:#5A6079;margin:0 0 16px;flex:1;">{{ a.desc }}</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #EEF1F8;padding-top:13px;">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ a.langs }}" as="l" hint-placeholder-count="2">
+                  <span style="font-size:11px;font-weight:600;color:#5A6079;background:#F1F3F8;padding:2px 9px;border-radius:6px;">{{ l }}</span>
+                </sc-for>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#8A90A6;font-weight:600;">
+                <span>★ {{ a.stars }}</span>
+                <span style="color:#2A6FDB;">Open ↗</span>
+              </div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#0A1430;color:#C9D4EC;">
+    <div style="max-width:1080px;margin:0 auto;padding:40px 28px 30px;display:flex;flex-wrap:wrap;gap:36px;justify-content:space-between;">
+      <div style="max-width:340px;">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+          <span style="display:inline-flex;width:38px;height:38px;border-radius:50%;background:#fff;align-items:center;justify-content:center;border:2px solid #D1A73B;"><span style="font-family:'Newsreader',Georgia,serif;font-weight:600;color:#003087;font-size:21px;line-height:1;">V</span></span>
+          <div style="display:flex;flex-direction:column;line-height:1.1;">
+            <span style="color:#fff;font-weight:800;letter-spacing:.05em;font-size:16px;">DETAIL LAB</span>
+            <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7E8CB0;font-weight:600;margin-top:3px;">Villanova University</span>
+          </div>
+        </div>
+        <p style="font-size:13px;line-height:1.6;margin:0;color:#9FB4DC;">Dependable, Efficient, and Intelligent Computing Lab. Dept. of Electrical &amp; Computer Engineering, Villanova University. 💙💛</p>
+      </div>
+      <div style="display:flex;gap:48px;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:13px;">
+          <span style="color:#fff;font-weight:700;margin-bottom:3px;">Explore</span>
+          <a class="detail-navlink" href="Research.dc.html" style="color:#9FB4DC;">Research</a>
+          <a class="detail-navlink" href="Publications.dc.html" style="color:#9FB4DC;">Publications</a>
+          <a class="detail-navlink" href="PaperReading.dc.html" style="color:#9FB4DC;">Paper Reading</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:13px;">
+          <span style="color:#fff;font-weight:700;margin-bottom:3px;">Contact</span>
+          <a href="mailto:xun.jiao@villanova.edu" style="color:#9FB4DC;">xun.jiao@villanova.edu</a>
+          <a href="https://vu-detail.github.io" style="color:#9FB4DC;">vu-detail.github.io</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.08);"><div style="max-width:1080px;margin:0 auto;padding:16px 28px;font-size:12px;color:#6B7BA3;">© 2026 DETAIL Lab · Villanova University</div></div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { kind: 'All' };
+
+  constructor(props){
+    super(props);
+    this.KIND = {
+      'Code':    { fg:'#003087', bg:'#EAF0FB', accent:'#003087', icon:'💻', iconBg:'#EAF0FB' },
+      'Dataset': { fg:'#0E8A7A', bg:'#E1F4F0', accent:'#0E8A7A', icon:'🗂️', iconBg:'#E1F4F0' },
+      'Tool':    { fg:'#2A6FDB', bg:'#E7F0FE', accent:'#2A6FDB', icon:'🛠️', iconBg:'#E7F0FE' },
+      'Model':   { fg:'#8A6A1E', bg:'#F6ECCF', accent:'#C79A3A', icon:'🧠', iconBg:'#F6ECCF' }
+    };
+    this.DATA = [
+      { id:'a1', kind:'Model', featured:true, name:'MoleHD', desc:'Hyperdimensional computing for molecular property prediction and low-cost drug discovery.', langs:['Python','PyTorch'], stars:'412', url:'#' },
+      { id:'a2', kind:'Tool', featured:true, name:'FuzzStack', desc:'Cross-layer, coverage-guided fuzzing harness spanning firmware, drivers, and AI runtimes.', langs:['C++','Python'], stars:'287', url:'#' },
+      { id:'a3', kind:'Code', name:'ResilientAccel-Sim', desc:'Simulator for fault injection and voltage overscaling in DNN accelerators (DEVoT/LEVAX).', langs:['C++','CUDA'], stars:'196', url:'#' },
+      { id:'a4', kind:'Dataset', name:'BitFlip-Criticality', desc:'Per-layer, per-bit criticality maps for INT8/INT4 networks under memory bit-flips.', langs:['JSON','Python'], stars:'88', url:'#' },
+      { id:'a5', kind:'Code', name:'ApproxMult-Bench', desc:'Benchmark suite of approximate multipliers with energy and accuracy characterization.', langs:['Verilog','Python'], stars:'134', url:'#' },
+      { id:'a6', kind:'Dataset', name:'HDC-Genomics', desc:'Encoded hypervector datasets for genomic sequence classification experiments.', langs:['NumPy'], stars:'73', url:'#' }
+    ];
+  }
+
+  setKind(k){ this.setState({ kind:k }); }
+
+  renderVals(){
+    const { kind } = this.state;
+    const kinds = ['All', ...Object.keys(this.KIND)];
+    const kindChips = kinds.map(k=>{
+      const on = k===kind;
+      return { label:k, onClick:()=>this.setKind(k), fg:on?'#fff':'#5A6079', bg:on?'#003087':'#fff', bd:on?'#003087':'#D8DEEC' };
+    });
+    const artifacts = this.DATA
+      .filter(a=> kind==='All' || a.kind===kind)
+      .map(a=>{ const k=this.KIND[a.kind]; return { ...a, accent:k.accent, icon:k.icon, iconBg:k.iconBg, kindLabel:a.kind.toUpperCase(), kindFg:k.fg, kindBg:k.bg }; });
+    return { kindChips, artifacts };
+  }
+}
+</script>
+</body>
+</html>
