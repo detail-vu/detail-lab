@@ -95,8 +95,7 @@
                 </sc-for>
               </div>
               <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#8A90A6;font-weight:600;">
-                <span>★ {{ a.stars }}</span>
-                <span style="color:#2A6FDB;">Open ↗</span>
+                <span style="color:#2A6FDB;">View on GitHub ↗</span>
               </div>
             </div>
           </a>
@@ -150,12 +149,11 @@ class Component extends DCLogic {
       'Model':   { fg:'#8A6A1E', bg:'#F6ECCF', accent:'#C79A3A', icon:'🧠', iconBg:'#F6ECCF' }
     };
     this.DATA = [
-      { id:'a1', kind:'Model', featured:true, name:'MoleHD', desc:'Hyperdimensional computing for molecular property prediction and low-cost drug discovery.', langs:['Python','PyTorch'], stars:'412', url:'#' },
-      { id:'a2', kind:'Tool', featured:true, name:'FuzzStack', desc:'Cross-layer, coverage-guided fuzzing harness spanning firmware, drivers, and AI runtimes.', langs:['C++','Python'], stars:'287', url:'#' },
-      { id:'a3', kind:'Code', name:'ResilientAccel-Sim', desc:'Simulator for fault injection and voltage overscaling in DNN accelerators (DEVoT/LEVAX).', langs:['C++','CUDA'], stars:'196', url:'#' },
-      { id:'a4', kind:'Dataset', name:'BitFlip-Criticality', desc:'Per-layer, per-bit criticality maps for INT8/INT4 networks under memory bit-flips.', langs:['JSON','Python'], stars:'88', url:'#' },
-      { id:'a5', kind:'Code', name:'ApproxMult-Bench', desc:'Benchmark suite of approximate multipliers with energy and accuracy characterization.', langs:['Verilog','Python'], stars:'134', url:'#' },
-      { id:'a6', kind:'Dataset', name:'HDC-Genomics', desc:'Encoded hypervector datasets for genomic sequence classification experiments.', langs:['NumPy'], stars:'73', url:'#' }
+      { id:'a1', kind:'Model', featured:true, name:'MoleHD', desc:'Drug discovery using brain-inspired hyperdimensional computing for molecular property prediction (BIBM\'22).', langs:['Python'], stars:'GitHub', url:'https://github.com/VU-DETAIL/MoleHD' },
+      { id:'a2', kind:'Tool', featured:true, name:'HD-Hub', desc:'A hub for hyperdimensional computing (HDC) implementations across different applications.', langs:['Python'], stars:'GitHub', url:'https://github.com/VU-DETAIL/HD-Hub' },
+      { id:'a3', kind:'Model', name:'ODHD', desc:'One-class brain-inspired hyperdimensional computing for outlier detection (DAC\'22).', langs:['Python'], stars:'GitHub', url:'https://github.com/Raisony/ODHD' },
+      { id:'a4', kind:'Model', name:'SpamHD', desc:'Memory-efficient text spam detection using brain-inspired hyperdimensional computing (ISVLSI\'21).', langs:['Python'], stars:'GitHub', url:'https://github.com/AikawaMafuyu/HamHD' },
+      { id:'a5', kind:'Code', name:'Workload-Aware Approximate Computing Configuration', desc:'Input-aware codebase for workload-aware approximate computing configuration (DATE\'21).', langs:['Python'], stars:'GitHub', url:'https://github.com/ThapaRahul/DETAIL-Input-Aware-CodeBase' }
     ];
   }
 
