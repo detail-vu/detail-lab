@@ -105,7 +105,7 @@
         </div>
         <sc-if value="{{ showToken }}">
           <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px;text-align:left;">
-            <input type="password" value="{{ tokenInput }}" onInput="{{ onTokenInput }}" placeholder="github_pat_… (Contents: read on the content repo)" style="border:1px solid #D8DEEC;border-radius:9px;padding:10px 12px;font-size:13px;font-family:ui-monospace,monospace;color:#1A1A2E;background:#fff;outline:none;"/>
+            <input type="password" value="{{ tokenInput }}" onInput="{{ onTokenInput }}" placeholder="github_pat_… (needs repo / Contents: read on the content repo)" style="border:1px solid #D8DEEC;border-radius:9px;padding:10px 12px;font-size:13px;font-family:ui-monospace,monospace;color:#1A1A2E;background:#fff;outline:none;"/>
             <button onClick="{{ unlockToken }}" style="background:#003087;color:#fff;font-weight:700;font-size:13.5px;padding:10px 16px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;">Unlock</button>
           </div>
         </sc-if>
@@ -113,12 +113,6 @@
         <sc-if value="{{ hasAccessMsg }}">
           <div style="margin-top:16px;font-size:12.5px;line-height:1.5;color:#9B2330;background:#FFF5F6;border:1px solid #F3C6CC;border-radius:9px;padding:10px 12px;text-align:left;">{{ accessMsg }}</div>
         </sc-if>
-
-        <div style="margin-top:22px;padding-top:16px;border-top:1px dashed #E1E6F0;display:flex;gap:14px;justify-content:center;">
-          <span onClick="{{ previewAuthorized }}" style="cursor:pointer;font-size:11.5px;color:#9AA3BD;font-weight:600;">▸ Preview member view</span>
-          <span onClick="{{ previewDenied }}" style="cursor:pointer;font-size:11.5px;color:#9AA3BD;font-weight:600;">▸ Preview no-access</span>
-        </div>
-        <div style="margin-top:6px;font-size:10.5px;color:#B6BECF;">Preview links are for design only — Claude Code wires the real GitHub OAuth.</div>
       </div>
     </section>
   </sc-if>
@@ -266,12 +260,21 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900},&quot;oauthUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const DETAIL_OWNER = 'wdzhwsh4067';
+const DETAIL_CONTENT_REPO = 'detail-lab-content';
+const DETAIL_BRANCH = 'main';
+// After you deploy the Cloudflare Worker, replace this with the worker base URL (no trailing slash), e.g. 'https://detail-lab-oauth.<subdomain>.workers.dev'
+const DETAIL_OAUTH_BASE = 'REPLACE_WITH_WORKER_URL';
+const GH_API = 'https://api.github.com/repos/' + DETAIL_OWNER + '/' + DETAIL_CONTENT_REPO + '/contents/';
+const ghHeaders = (token) => ({ 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json' });
+const b64decode = (b64) => decodeURIComponent(escape(atob((b64||'').replace(/\s/g,''))));
+
 class Component extends DCLogic {
   state = {
     sessions: [], activeId: null, mdCache: {}, query: '', tag: 'All', status: 'loading',
     auth: 'anon', showToken: false, tokenInput: '', accessMsg: '', memberLabel: 'DETAIL members',
     showSubmit: false, submitStatus: null, submitMsg: '',
-    form: { owner:'vu-detail', repo:'detail-lab-content', branch:'main', token:'',
+    form: { owner:'wdzhwsh4067', repo:'detail-lab-content', branch:'main', token:'',
             date:'', title:'', presenter:'', venue:'', tags:'', paperUrl:'', body:'' }
   };
 
@@ -283,14 +286,28 @@ class Component extends DCLogic {
   //  - loadIndex()/loadMd(): switch from local fetch to the authenticated
   //    GitHub Contents API against the private content repo.
   componentDidMount(){
+    // OAuth return: token arrives in the URL hash (#access_token=XXX&...)
+    if(typeof window!=='undefined' && window.location && window.location.hash){
+      const hp = new URLSearchParams(window.location.hash.slice(1));
+      const ht = hp.get('access_token');
+      if(ht){
+        try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+        try { localStorage.setItem('detail_gh_token', ht); } catch(e){}
+        this.setState({ auth:'authorizing' });
+        this.verifyAccess(ht);
+        return;
+      }
+    }
     const t = (typeof localStorage!=='undefined') && localStorage.getItem('detail_gh_token');
     if(t){ this.setState({ auth:'authorizing' }); this.verifyAccess(t); }
   }
 
   login(){
-    const url = this.props.oauthUrl;
-    if(url && url !== '#'){ window.location.href = url; return; }
-    this.setState({ accessMsg:'"Log in with GitHub" needs the OAuth backend, which Claude Code will connect during deployment. For now, use an access token or the preview links below.' });
+    if(DETAIL_OAUTH_BASE && DETAIL_OAUTH_BASE !== 'REPLACE_WITH_WORKER_URL'){
+      window.location.href = DETAIL_OAUTH_BASE + '/auth';
+      return;
+    }
+    this.setState({ accessMsg:'GitHub login needs the OAuth worker URL configured (DETAIL_OAUTH_BASE). For now use an access token below.' });
   }
 
   toggleToken(){ this.setState(s=>({ showToken: !s.showToken })); }
@@ -302,11 +319,24 @@ class Component extends DCLogic {
     this.verifyAccess(t);
   }
 
-  verifyAccess(token){
-    // Placeholder verification — real check is a GitHub API call (see note above).
-    try { localStorage.setItem('detail_gh_token', token); } catch(e){}
-    this.setState({ auth:'authorized', form:{ ...this.state.form, token } });
-    this.loadIndex();
+  async verifyAccess(token){
+    try {
+      const res = await fetch(GH_API + 'data/reading/index.json?ref=' + DETAIL_BRANCH, { headers: ghHeaders(token) });
+      if(res.status === 200){
+        let label = 'DETAIL member';
+        try { const u = await fetch('https://api.github.com/user',{headers:ghHeaders(token)}); if(u.ok){ const uj=await u.json(); label = uj.login || label; } } catch(e){}
+        try { localStorage.setItem('detail_gh_token', token); } catch(e){}
+        this.setState({ auth:'authorized', memberLabel: label, accessMsg:'', form:{ ...this.state.form, token, owner:DETAIL_OWNER, repo:DETAIL_CONTENT_REPO, branch:DETAIL_BRANCH } });
+        this.loadIndex();
+      } else if([401,403,404].includes(res.status)){
+        try { localStorage.removeItem('detail_gh_token'); } catch(e){}
+        this.setState({ auth:'denied' });
+      } else {
+        this.setState({ auth:'anon', accessMsg:'Unexpected response ('+res.status+'). Try again.' });
+      }
+    } catch(e){
+      this.setState({ auth:'anon', accessMsg:'Network error verifying access.' });
+    }
   }
 
   logout(){
@@ -314,28 +344,27 @@ class Component extends DCLogic {
     this.setState({ auth:'anon', tokenInput:'', accessMsg:'', showSubmit:false, sessions:[], activeId:null, status:'loading' });
   }
 
-  // Design-preview only — Claude Code can delete these two.
-  previewAuthorized(){ this.setState({ auth:'authorized', memberLabel:'preview (demo)' }); this.loadIndex(); }
-  previewDenied(){ this.setState({ auth:'denied' }); }
-
   // ── CONTENT LOADER ─────────────────────────────────────
   async loadIndex(){
     try {
-      const res = await fetch('data/reading/index.json');
+      const token = this.state.form.token;
+      const res = await fetch(GH_API + 'data/reading/index.json?ref=' + DETAIL_BRANCH, { headers: ghHeaders(token) });
       if(!res.ok) throw new Error('index');
-      const sessions = await res.json();
+      const json = await res.json();
+      const sessions = JSON.parse(b64decode(json.content));
       sessions.sort((a,b)=> (a.date < b.date ? 1 : -1));
       const first = sessions[0];
-      this.setState({ sessions, status: 'ready', activeId: first ? first.id : null });
+      this.setState({ sessions, status:'ready', activeId: first ? first.id : null });
       if(first) this.loadMd(first);
-    } catch(e){ this.setState({ status: 'error' }); }
+    } catch(e){ this.setState({ status:'error' }); }
   }
 
   async loadMd(session){
     if(this.state.mdCache[session.id]) return;
     try {
-      const res = await fetch('data/reading/' + session.file);
-      const text = res.ok ? await res.text() : '*Could not load this session.*';
+      const token = this.state.form.token;
+      const res = await fetch(GH_API + 'data/reading/' + session.file + '?ref=' + DETAIL_BRANCH, { headers: ghHeaders(token) });
+      const text = res.ok ? b64decode((await res.json()).content) : '*Could not load this session.*';
       this.setState(s=>({ mdCache: { ...s.mdCache, [session.id]: text } }));
     } catch(e){
       this.setState(s=>({ mdCache: { ...s.mdCache, [session.id]: '*Could not load this session.*' } }));
@@ -470,8 +499,6 @@ class Component extends DCLogic {
       accessMsg: this.state.accessMsg,
       hasAccessMsg: !!this.state.accessMsg,
       memberLabel: this.state.memberLabel,
-      previewAuthorized: ()=>this.previewAuthorized(),
-      previewDenied: ()=>this.previewDenied(),
 
       isLoading: status==='loading',
       hasError: status==='error',
