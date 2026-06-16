@@ -271,7 +271,7 @@ const DETAIL_OWNER = 'wdzhwsh4067';
 const DETAIL_CONTENT_REPO = 'detail-lab-content';
 const DETAIL_BRANCH = 'main';
 // After you deploy the Cloudflare Worker, replace this with the worker base URL (no trailing slash), e.g. 'https://detail-lab-oauth.<subdomain>.workers.dev'
-const DETAIL_OAUTH_BASE = 'REPLACE_WITH_WORKER_URL';
+const DETAIL_OAUTH_BASE = 'https://detail-lab-oauth.wdzhwish7952.workers.dev';
 const GH_API = 'https://api.github.com/repos/' + DETAIL_OWNER + '/' + DETAIL_CONTENT_REPO + '/contents/';
 const ghHeaders = (token) => ({ 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json' });
 const b64decode = (b64) => decodeURIComponent(escape(atob((b64||'').replace(/\s/g,''))));
