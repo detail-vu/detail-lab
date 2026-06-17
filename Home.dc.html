@@ -37,9 +37,12 @@
   .detail-navlinks{scrollbar-width:none;-webkit-overflow-scrolling:touch;}
   .detail-navlinks::-webkit-scrollbar{display:none;}
   .detail-navlinks a{flex:0 0 auto;}
+  .detail-hero-body{padding-top:64px!important;padding-bottom:92px!important;}
   @media (max-width:1024px){
     .detail-statgrid{grid-template-columns:repeat(2,1fr)!important;}
     .detail-pillars{grid-template-columns:repeat(2,1fr)!important;}
+    .detail-hero{height:470px!important;}
+    .detail-hero-body{padding-bottom:172px!important;}
   }
   @media (max-width:820px){
     .detail-gallery{grid-template-columns:1fr 1fr!important;}
@@ -53,6 +56,12 @@
     .detail-stats-num{font-size:24px!important;}
     .detail-pillars{grid-template-columns:repeat(2,1fr)!important;}
     .detail-statgrid{grid-template-columns:repeat(2,1fr)!important;row-gap:14px!important;}
+    .detail-hero{height:512px!important;}
+    .detail-hero-body{padding-bottom:188px!important;}
+    .detail-newsrow{flex-wrap:wrap!important;gap:7px 10px!important;padding:11px 14px!important;}
+    .detail-newsrow>span:nth-child(2){flex:0 0 auto!important;padding-left:9px!important;padding-right:9px!important;}
+    .detail-newsrow>span:nth-child(3){flex:1 1 100%!important;order:3!important;line-height:1.4!important;}
+    .detail-newsrow>span:nth-child(4){display:none!important;}
   }
 </style>
 </helmet>
@@ -81,13 +90,13 @@
   </header>
 
   <!-- ROTATING HERO (compact) -->
-  <section style="position:relative;height:404px;margin-top:-64px;background:#003087;overflow:hidden;">
+  <section class="detail-hero" style="position:relative;height:392px;margin-top:-64px;background:#003087;overflow:hidden;">
 
     <!-- HERO A: Topology -->
     <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroAOp }};z-index:{{ heroAZ }};pointer-events:{{ heroAPe }};background:#003087;color:#fff;overflow:hidden;">
       <img src="assets/hero/hero-a.jpg" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;"/>
       <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(0,32,90,.82) 0%,rgba(0,48,135,.55) 55%,rgba(0,48,135,.25) 100%);"></div>
-      <div style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
+      <div class="detail-hero-body" style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
         <div style="display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:14px;"><span style="width:22px;height:1px;background:var(--accent,#D1A73B);display:inline-block;"></span>Villanova University · ECE</div>
         <h1 class="detail-hero-h1" style="max-width:760px;font-size:40px;line-height:1.08;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance;">Dependable, Efficient &amp; Intelligent Computing</h1>
         <p style="max-width:600px;font-size:17px;line-height:1.45;color:#C9D4EC;margin:0 0 22px;">Cross-layer AI/ML systems research: <strong style="color:#fff;font-weight:600;">robust, efficient, brain-inspired.</strong> 🧠</p>
@@ -102,7 +111,7 @@
     <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroBOp }};z-index:{{ heroBZ }};pointer-events:{{ heroBPe }};background:#003087;color:#fff;overflow:hidden;">
       <img src="assets/hero/hero-b.jpg" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;"/>
       <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(0,32,90,.82) 0%,rgba(0,48,135,.5) 55%,rgba(0,48,135,.25) 100%);"></div>
-      <div style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
+      <div class="detail-hero-body" style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
         <div style="font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:12px;">DETAIL Lab · Villanova ECE</div>
         <h1 class="detail-hero-h1" style="max-width:760px;font-size:40px;line-height:1.08;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance;">Engineering AI you can <span style="color:var(--accent,#D1A73B);">depend</span> on.</h1>
         <p style="max-width:600px;font-size:17px;line-height:1.45;color:#C9D4EC;margin:0 0 22px;">Robust, efficient, brain-inspired systems — from silicon faults to large models. ⚡</p>
@@ -113,28 +122,11 @@
       </div>
     </div>
 
-    <!-- HERO C: Editorial mono -->
-    <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroCOp }};z-index:{{ heroCZ }};pointer-events:{{ heroCPe }};background:#F7F8FB;color:#1A1A2E;overflow:hidden;">
-      <svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;right:0;width:44%;height:100%;opacity:.55;" aria-hidden="true">
-        <g stroke="#003087" stroke-width="1" fill="none" opacity=".3" style="animation:detailDrift2 26s ease-in-out infinite;"><line x1="90" y1="60" x2="330" y2="160"/><line x1="330" y1="160" x2="240" y2="300"/><line x1="330" y1="160" x2="540" y2="100"/><line x1="540" y1="100" x2="480" y2="280"/></g>
-        <g fill="var(--accent,#D1A73B)" style="animation:detailDrift1 22s ease-in-out infinite;"><circle cx="90" cy="60" r="5"/><circle cx="330" cy="160" r="8"/><circle cx="540" cy="100" r="5"/><circle cx="240" cy="300" r="5"/><circle cx="480" cy="280" r="6"/></g>
-      </svg>
-      <div style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;">
-        <div style="width:46px;height:4px;background:var(--accent,#D1A73B);margin-bottom:16px;border-radius:2px;"></div>
-        <h1 class="detail-hero-h1" style="font-family:'Newsreader',Georgia,serif;font-size:46px;line-height:1.04;font-weight:600;letter-spacing:-.02em;margin:0 0 10px;color:#003087;max-width:680px;text-wrap:balance;">Dependable, Efficient &amp; Intelligent Computing.</h1>
-        <p style="font-size:17px;color:#5A6079;margin:0 0 22px;max-width:440px;line-height:1.45;">Cross-layer AI/ML systems research at Villanova ECE. 🔬</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a class="detail-cta-primary" href="Research.dc.html" style="display:inline-flex;align-items:center;gap:8px;background:#003087;color:#fff;font-weight:700;font-size:14px;padding:11px 20px;border-radius:9px;">Explore Research →</a>
-          <a href="People.dc.html" style="display:inline-flex;align-items:center;border:1.5px solid #003087;color:#003087;font-weight:600;font-size:14px;padding:11px 20px;border-radius:9px;">Meet the Team</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- HERO D: Lab photo -->
+    <!-- HERO C: Lab photo -->
     <div style="position:absolute;inset:0;transition:opacity .9s ease;opacity:{{ heroDOp }};z-index:{{ heroDZ }};pointer-events:{{ heroDPe }};background:#0A1430;overflow:hidden;">
       <img src="assets/lab-group-four.jpg" alt="DETAIL Lab group" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;position:absolute;inset:0;display:block;"/>
       <div style="position:absolute;inset:0;background:linear-gradient(95deg,rgba(0,24,68,.92) 0%,rgba(0,32,90,.66) 42%,rgba(0,32,90,.12) 100%);"></div>
-      <div style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;color:#fff;">
+      <div class="detail-hero-body" style="position:relative;max-width:min(1680px,94vw);margin:0 auto;padding:0 28px;height:100%;display:flex;flex-direction:column;justify-content:center;color:#fff;">
         <div style="display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--accent,#D1A73B);margin-bottom:14px;">🎓 Life in the Lab</div>
         <h1 class="detail-hero-h1" style="max-width:600px;font-size:38px;line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;">A community that ships research — and celebrates together.</h1>
         <p style="max-width:500px;font-size:16px;line-height:1.45;color:#D6DFF2;margin:0 0 22px;">Ten researchers across hardware, ML, and systems. 🥂</p>
@@ -144,29 +136,22 @@
       </div>
     </div>
 
+    <!-- STATS overlaid on the hero background -->
+    <div ref="{{ statsRef }}" style="position:absolute;left:0;right:0;bottom:0;z-index:18;background:linear-gradient(to top, rgba(0,15,46,.94), rgba(0,15,46,.55) 55%, rgba(0,15,46,0));padding-top:36px;pointer-events:none;">
+      <div class="detail-statgrid" style="max-width:min(1680px,94vw);margin:0 auto;padding:0 28px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+        <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:1px;border-left:3px solid var(--accent,#D1A73B);padding-left:12px;">
+            <div class="detail-stats-num" style="font-size:27px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.05;display:flex;align-items:baseline;">{{ stat.display }}<span style="color:var(--accent,#D1A73B);">{{ stat.suffix }}</span></div>
+            <div style="font-size:11px;color:#C9D4EC;font-weight:500;">{{ stat.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
     <!-- PREV / NEXT ARROWS -->
     <button onClick="{{ prevHero }}" class="detail-heroarrow" aria-label="Previous slide" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);z-index:25;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(10,20,48,.4);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);font-family:inherit;padding:0;">‹</button>
     <button onClick="{{ nextHero }}" class="detail-heroarrow" aria-label="Next slide" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:25;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(10,20,48,.4);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);font-family:inherit;padding:0;">›</button>
 
-    <!-- DOTS -->
-    <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:9px;align-items:center;">
-      <span class="detail-dot" onClick="{{ goHero0 }}" style="height:9px;border-radius:5px;width:{{ dot0w }};background:{{ dot0bg }};"></span>
-      <span class="detail-dot" onClick="{{ goHero1 }}" style="height:9px;border-radius:5px;width:{{ dot1w }};background:{{ dot1bg }};"></span>
-      <span class="detail-dot" onClick="{{ goHero2 }}" style="height:9px;border-radius:5px;width:{{ dot2w }};background:{{ dot2bg }};"></span>
-      <span class="detail-dot" onClick="{{ goHero3 }}" style="height:9px;border-radius:5px;width:{{ dot3w }};background:{{ dot3bg }};"></span>
-    </div>
-  </section>
-
-  <!-- STATS strip (deeper navy + gold seam, compact) -->
-  <section ref="{{ statsRef }}" style="background:#003087;border-top:3px solid var(--accent,#D1A73B);">
-    <div class="detail-statgrid" style="max-width:min(1680px,94vw);margin:0 auto;padding:14px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
-      <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
-        <div style="display:flex;flex-direction:column;gap:1px;border-left:3px solid var(--accent,#D1A73B);padding-left:12px;">
-          <div class="detail-stats-num" style="font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.05;display:flex;align-items:baseline;">{{ stat.display }}<span style="color:var(--accent,#D1A73B);">{{ stat.suffix }}</span></div>
-          <div style="font-size:11.5px;color:#A9BBDD;font-weight:500;">{{ stat.label }}</div>
-        </div>
-      </sc-for>
-    </div>
   </section>
 
   <!-- LATEST NEWS — dense list -->
@@ -337,7 +322,7 @@ class Component extends DCLogic {
     this.rootRef = React.createRef();
     this.statsRef = React.createRef();
     this.targets = [60, 12, 6, 8];
-    this.HERO_COUNT = 4;
+    this.HERO_COUNT = 3;
   }
 
   applyAccent(){
@@ -446,11 +431,7 @@ class Component extends DCLogic {
       rootRef:this.rootRef, statsRef:this.statsRef, stats, news,
       heroAOp: h===0?1:0, heroAZ: h===0?10:1, heroAPe: h===0?'auto':'none',
       heroBOp: h===1?1:0, heroBZ: h===1?10:1, heroBPe: h===1?'auto':'none',
-      heroCOp: h===2?1:0, heroCZ: h===2?10:1, heroCPe: h===2?'auto':'none',
-      heroDOp: h===3?1:0, heroDZ: h===3?10:1, heroDPe: h===3?'auto':'none',
-      dot0w:dotW(0), dot1w:dotW(1), dot2w:dotW(2), dot3w:dotW(3),
-      dot0bg:dotBg(0), dot1bg:dotBg(1), dot2bg:dotBg(2), dot3bg:dotBg(3),
-      goHero0:()=>this.goHero(0), goHero1:()=>this.goHero(1), goHero2:()=>this.goHero(2), goHero3:()=>this.goHero(3),
+      heroDOp: h===2?1:0, heroDZ: h===2?10:1, heroDPe: h===2?'auto':'none',
       prevHero:()=>this.prevHero(), nextHero:()=>this.nextHero()
     };
   }
