@@ -159,7 +159,7 @@
               <div class="detail-submit-grid" style="display:grid;grid-template-columns:1fr;gap:14px;">
                 <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#41485E;">Paper title *<input value="{{ fTitle }}" onInput="{{ onTitle }}" placeholder="Title of the paper" style="border:1px solid #D8DEEC;border-radius:9px;padding:9px 12px;font-size:13.5px;font-family:inherit;color:#1A1A2E;background:#fff;outline:none;"/></label>
                 <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#41485E;">Paper URL<input value="{{ fPaperUrl }}" onInput="{{ onPaperUrl }}" placeholder="https://…" style="border:1px solid #D8DEEC;border-radius:9px;padding:9px 12px;font-size:13.5px;font-family:inherit;color:#1A1A2E;background:#fff;outline:none;"/></label>
-                <label style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:700;color:#41485E;">Tags <span style="font-weight:500;color:#8A90A6;">(pick one or more members)</span>
+                <label style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:700;color:#41485E;">Tags <span style="font-weight:500;color:#8A90A6;">(pick a member)</span>
                   <div style="display:flex;flex-wrap:wrap;gap:7px;">
                     <sc-for list="{{ tagOptions }}" as="opt" hint-placeholder-count="6">
                       <span onClick="{{ opt.onClick }}" style="cursor:pointer;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;color:{{ opt.fg }};background:{{ opt.bg }};border:1px solid {{ opt.bd }};">{{ opt.label }}</span>
@@ -408,7 +408,7 @@ class Component extends DCLogic {
   // ── SUBMIT ─────────────────────────────────────────────
   toggleSubmit(){ this.setState(s=>({ showSubmit: !s.showSubmit })); }
   setField(k,v){ this.setState(s=>({ form: { ...s.form, [k]: v } })); }
-  toggleTag(name){ this.setState(s=>{ const has=(s.form.tags||[]).includes(name); return { form: { ...s.form, tags: has ? s.form.tags.filter(t=>t!==name) : [ ...(s.form.tags||[]), name ] } }; }); }
+  toggleTag(name){ this.setState(s=>{ const has=(s.form.tags||[]).includes(name); return { form: { ...s.form, tags: has ? [] : [ name ] } }; }); }
 
   async submitSession(){
     const f = this.state.form;
