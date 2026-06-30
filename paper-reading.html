@@ -593,7 +593,11 @@ class Component extends DCLogic {
     const { sessions, activeId, mdCache, query, tag, status, auth } = this.state;
     const accentFor = (i)=> ['#003087','#2A6FDB','#0E8A7A','#C79A3A'][i % 4];
 
-    const allTags = ['All', ...Array.from(new Set(sessions.flatMap(s=>s.tags||[])))];
+    // Filter chips = the fixed member list (so everyone shows even with no notes yet),
+    // plus any extra/legacy tags actually present in sessions.
+    const sessionTags = Array.from(new Set(sessions.flatMap(s=>s.tags||[])));
+    const extraTags = sessionTags.filter(t=> !SESSION_TAGS.includes(t));
+    const allTags = ['All', ...SESSION_TAGS, ...extraTags];
     const tagChips = allTags.map(t=>{
       const on = t === tag;
       return { label:t, onClick:()=>this.setTag(t),
