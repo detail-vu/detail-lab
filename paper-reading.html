@@ -390,9 +390,9 @@ class Component extends DCLogic {
   cget(path){
     if(this.state.auth==='viewer'){
       const s = this.state.viewSession || ((typeof localStorage!=='undefined' && localStorage.getItem('detail_view_session')) || '');
-      return fetch(DETAIL_OAUTH_BASE + '/content?path=' + encodeURIComponent(path) + '&ref=' + encodeURIComponent(DETAIL_BRANCH), { headers: { 'Authorization':'Bearer ' + s } });
+      return fetch(DETAIL_OAUTH_BASE + '/content?path=' + encodeURIComponent(path) + '&ref=' + encodeURIComponent(DETAIL_BRANCH), { headers: { 'Authorization':'Bearer ' + s }, cache:'no-store' });
     }
-    return fetch(GH_API + path + '?ref=' + encodeURIComponent(DETAIL_BRANCH), { headers: ghHeaders(this.state.form.token) });
+    return fetch(GH_API + path + '?ref=' + encodeURIComponent(DETAIL_BRANCH), { headers: ghHeaders(this.state.form.token), cache:'no-store' });
   }
 
   async loadIndex(){
@@ -454,7 +454,7 @@ class Component extends DCLogic {
       // GET current file -> append -> PUT. Retry once if another writer raced us (409/422).
       for(let attempt=0; attempt<2; attempt++){
         let arr = [], sha;
-        const cur = await fetch(api + path + '?ref=' + DETAIL_BRANCH, { headers });
+        const cur = await fetch(api + path + '?ref=' + DETAIL_BRANCH, { headers, cache:'no-store' });
         if(cur.status===200){ const j = await cur.json(); sha = j.sha; try { arr = JSON.parse(b64decode(j.content)); } catch(e){ arr = []; } }
         if(!Array.isArray(arr)) arr = [];
         arr.push(entry);
@@ -568,19 +568,35 @@ class Component extends DCLogic {
       const md = '# ' + f.title.trim() + '\n\n**Presenter:** ' + (f.presenter||'—') + ' · **Date:** ' + date + '\n**Venue:** ' + (f.venue||'—') + '\n\n' + f.body.trim() + '\n';
       const api = 'https://api.github.com/repos/' + f.owner + '/' + f.repo + '/contents/';
       const headers = { 'Authorization':'Bearer ' + f.token, 'Accept':'application/vnd.github+json', 'Content-Type':'application/json' };
-      const put = async (path, payload)=>{
-        const r = await fetch(api + path, { method:'PUT', headers, body: JSON.stringify(payload) });
-        if(!r.ok){ const j = await r.json().catch(()=>({})); throw new Error((j && j.message) || ('HTTP ' + r.status)); }
+      const getJson = async (path)=>{
+        const r = await fetch(api + path + '?ref=' + encodeURIComponent(f.branch), { headers, cache:'no-store' });
+        if(r.status===404) return null;
+        if(!r.ok) throw new Error('GET ' + path + ' (HTTP ' + r.status + ')');
         return r.json();
       };
-      await put('data/reading/' + file, { message:'Add reading session: ' + f.title.trim(), content: enc(md), branch: f.branch });
-      const idxRes = await fetch(api + 'data/reading/index.json?ref=' + encodeURIComponent(f.branch), { headers });
-      if(!idxRes.ok) throw new Error('Could not read index.json (HTTP ' + idxRes.status + ')');
-      const idxJson = await idxRes.json();
-      const current = JSON.parse(dec(idxJson.content));
-      current.unshift({ id:slug, date:date, title:f.title.trim(), presenter:f.presenter||'', venue:f.venue||'', tags:tagsArr, file, paperUrl:f.paperUrl||'' });
-      await put('data/reading/index.json', { message:'Index reading session: ' + f.title.trim(), content: enc(JSON.stringify(current,null,2) + '\n'), sha: idxJson.sha, branch: f.branch });
-      this.setState(s=>({ submitStatus:'success', submitMsg:'✓ Committed! It will appear after the Pages build finishes.',
+      const put = async (path, payload)=>{
+        const r = await fetch(api + path, { method:'PUT', headers, body: JSON.stringify(payload) });
+        if(!r.ok){ const j = await r.json().catch(()=>({})); const e = new Error((j && j.message) || ('HTTP ' + r.status)); e.status = r.status; throw e; }
+        return r.json();
+      };
+      // Write the markdown file (overwrite if a same-named draft exists from a failed retry).
+      const existingMd = await getJson('data/reading/' + file);
+      await put('data/reading/' + file, { message:'Add reading session: ' + f.title.trim(), content: enc(md), branch: f.branch, ...(existingMd && existingMd.sha ? { sha: existingMd.sha } : {}) });
+      // Update the index with a FRESH sha; retry if the file changed under us (409/422).
+      let done = false, lastErr;
+      for(let attempt=0; attempt<3 && !done; attempt++){
+        const idxJson = await getJson('data/reading/index.json');
+        if(!idxJson) throw new Error('index.json not found');
+        const arr = JSON.parse(dec(idxJson.content));
+        const list = Array.isArray(arr) ? arr.filter(x=> x && x.id !== slug) : []; // dedupe on retry
+        list.unshift({ id:slug, date:date, title:f.title.trim(), presenter:f.presenter||'', venue:f.venue||'', tags:tagsArr, file, paperUrl:f.paperUrl||'' });
+        try {
+          await put('data/reading/index.json', { message:'Index reading session: ' + f.title.trim(), content: enc(JSON.stringify(list,null,2) + '\n'), sha: idxJson.sha, branch: f.branch });
+          done = true;
+        } catch(e){ lastErr = e; if(e.status!==409 && e.status!==422) throw e; }
+      }
+      if(!done) throw new Error((lastErr && lastErr.message) || 'index conflict — please try again');
+      this.setState(s=>({ submitStatus:'success', submitMsg:'✓ Posted! Refresh to see it in the list.',
         form: { ...s.form, date:'', title:'', presenter:'', venue:'', tags:[], paperUrl:'', body:'' } }));
       this.loadIndex();
     } catch(e){
