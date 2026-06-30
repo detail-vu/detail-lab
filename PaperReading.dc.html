@@ -265,7 +265,7 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900},&quot;oauthUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
-const DETAIL_OWNER = 'detail-villanova';
+const DETAIL_OWNER = 'detail-vu';
 const DETAIL_CONTENT_REPO = 'detail-lab-content';
 const DETAIL_BRANCH = 'main';
 // After you deploy the Cloudflare Worker, replace this with the worker base URL (no trailing slash), e.g. 'https://detail-lab-oauth.<subdomain>.workers.dev'
@@ -281,7 +281,7 @@ class Component extends DCLogic {
     sessions: [], activeId: null, mdCache: {}, query: '', tag: 'All', status: 'loading',
     auth: 'anon', showToken: false, tokenInput: '', accessMsg: '', memberLabel: 'DETAIL members',
     showSubmit: false, submitStatus: null, submitMsg: '',
-    form: { owner:'detail-villanova', repo:'detail-lab-content', branch:'main', token:'',
+    form: { owner:'detail-vu', repo:'detail-lab-content', branch:'main', token:'',
             date:'', title:'', presenter:'', venue:'', tags:[], paperUrl:'', body:'' }
   };
 
