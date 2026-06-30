@@ -3,9 +3,9 @@
 Public website for the DETAIL Lab, with a members-only **Paper Reading** section
 gated behind GitHub authentication.
 
-- **Live site:** https://wdzhwsh4067.github.io/detail-lab-site/
-- **Paper Reading (gated):** https://wdzhwsh4067.github.io/detail-lab-site/PaperReading.dc.html
-- **Public site repo:** https://github.com/wdzhwsh4067/detail-lab-site
+- **Live site:** https://detail-vu.github.io/detail-lab/
+- **Paper Reading (gated):** https://detail-vu.github.io/detail-lab/paper-reading.html
+- **Public site repo:** https://github.com/wdzhwsh4067/detail-lab
 - **Private content repo:** https://github.com/wdzhwsh4067/detail-lab-content
 
 ---
@@ -14,7 +14,7 @@ gated behind GitHub authentication.
 
 The site is split into two repositories:
 
-1. **Public site repo** (`wdzhwsh4067/detail-lab-site`) — all the HTML pages,
+1. **Public site repo** (`wdzhwsh4067/detail-lab`) — all the HTML pages,
    assets, and front-end logic. Served as static files by **GitHub Pages**.
    Anyone can read this repo and view the public pages. It contains **no**
    reading-group notes.
@@ -60,7 +60,7 @@ The Paper Reading page supports two sign-in paths:
 Cloudflare Worker (`oauth-worker/`). The worker holds the OAuth client secret so
 it never reaches the browser; it returns a token to the page, which stores it in
 `localStorage`. **This path is inactive until you complete the manual steps
-below** (`DETAIL_OAUTH_BASE` in `PaperReading.dc.html` is currently the
+below** (`DETAIL_OAUTH_BASE` in `paper-reading.html` is currently the
 placeholder `REPLACE_WITH_WORKER_URL`).
 
 ### 2. Access-token fallback (works today)
@@ -82,7 +82,7 @@ by the automation. Do them in order.
 
 1. **Register a GitHub OAuth App.** Go to
    https://github.com/settings/developers → **New OAuth App**:
-   - **Homepage URL:** `https://wdzhwsh4067.github.io/detail-lab-site/`
+   - **Homepage URL:** `https://detail-vu.github.io/detail-lab/`
    - **Authorization callback URL:**
      `https://detail-lab-oauth.<your-workers-subdomain>.workers.dev/callback`
      (you'll learn the real subdomain after step 2 — a placeholder is fine for
@@ -108,11 +108,11 @@ by the automation. Do them in order.
    from what you registered in step 1, edit the OAuth App's **Authorization
    callback URL** to match the real `https://<worker-url>/callback`.
 
-5. **Wire the front end.** In `PaperReading.dc.html`, set `DETAIL_OAUTH_BASE` to
+5. **Wire the front end.** In `paper-reading.html`, set `DETAIL_OAUTH_BASE` to
    the deployed worker base URL (no trailing slash), then commit and push.
    Also confirm `SITE_URL` in `oauth-worker/wrangler.toml` matches the Paper
    Reading page URL
-   (`https://wdzhwsh4067.github.io/detail-lab-site/PaperReading.dc.html`); if you
+   (`https://detail-vu.github.io/detail-lab/paper-reading.html`); if you
    change it, redeploy the worker (`npx wrangler deploy`).
 
 6. **Add lab members as collaborators on the PRIVATE repo**

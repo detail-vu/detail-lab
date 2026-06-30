@@ -54,7 +54,7 @@ GitHub without exposing the client secret in the browser.
    ```
 
 5. **Wire the front end**: copy the deployed worker URL (no trailing slash) into
-   `DETAIL_OAUTH_BASE` in `PaperReading.dc.html`. If the deployed page path differs
+   `DETAIL_OAUTH_BASE` in `paper-reading.html`. If the deployed page path differs
    from the default, also update `SITE_URL` in `wrangler.toml`.
 
 6. **Redeploy** the worker after editing `wrangler.toml`:
