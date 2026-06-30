@@ -5,3 +5,10 @@ compatibility_date = "2024-11-01"
 [vars]
 SITE_URL = "https://detail-vu.github.io/detail-lab/paper-reading.html"
 SCOPE = "repo"
+CONTENT_REPO = "detail-vu/detail-lab-content"
+
+# Secrets (set with `wrangler secret put <NAME>`, not stored here):
+#   GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET  — GitHub OAuth app (one-click login)
+#   VIEW_PASSWORD                           — shared read-only view password
+#   CONTENT_TOKEN                           — GitHub token with READ access to CONTENT_REPO
+#                                             (used server-side only to proxy /content)

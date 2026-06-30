@@ -120,6 +120,17 @@
           </div>
         </sc-if>
 
+        <div style="margin-top:12px;">
+          <span onClick="{{ togglePw }}" style="cursor:pointer;font-size:12.5px;font-weight:600;color:#5A6079;border-bottom:1px dashed #B9C1D6;">Or view with a password</span>
+        </div>
+        <sc-if value="{{ showPw }}">
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;text-align:left;">
+            <div style="font-size:12px;line-height:1.6;color:#5A6079;background:#F4F6FA;border:1px solid #E1E6F0;border-radius:10px;padding:12px 13px;">Read-only access — enter the lab view password to browse the notes. You won't be able to submit in this mode.</div>
+            <input type="password" value="{{ pwInput }}" onInput="{{ onPwInput }}" placeholder="View password" style="border:1px solid #D8DEEC;border-radius:9px;padding:10px 12px;font-size:13px;color:#1A1A2E;background:#fff;outline:none;"/>
+            <button onClick="{{ unlockPassword }}" style="background:#003087;color:#fff;font-weight:700;font-size:13.5px;padding:10px 16px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;">View notes</button>
+          </div>
+        </sc-if>
+
         <sc-if value="{{ hasAccessMsg }}">
           <div style="margin-top:16px;font-size:12.5px;line-height:1.5;color:#9B2330;background:#FFF5F6;border:1px solid #F3C6CC;border-radius:9px;padding:10px 12px;text-align:left;">{{ accessMsg }}</div>
         </sc-if>
@@ -148,7 +159,9 @@
         <div style="max-width:min(1680px,94vw);margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
           <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#1F6B3B;font-weight:600;">🔓 Signed in — {{ memberLabel }}</div>
           <div style="display:flex;align-items:center;gap:12px;">
-            <button onClick="{{ toggleSubmit }}" style="display:inline-flex;align-items:center;gap:7px;background:#D1A73B;color:#1A1A2E;font-weight:700;font-size:13px;padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;">➕ Submit a session</button>
+            <sc-if value="{{ canSubmit }}">
+              <button onClick="{{ toggleSubmit }}" style="display:inline-flex;align-items:center;gap:7px;background:#D1A73B;color:#1A1A2E;font-weight:700;font-size:13px;padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;">➕ Submit a session</button>
+            </sc-if>
             <span onClick="{{ logout }}" style="cursor:pointer;font-size:13px;font-weight:600;color:#8A90A6;">Log out</span>
           </div>
         </div>
@@ -280,6 +293,7 @@ class Component extends DCLogic {
   state = {
     sessions: [], activeId: null, mdCache: {}, query: '', tag: 'All', status: 'loading',
     auth: 'anon', showToken: false, tokenInput: '', accessMsg: '', memberLabel: 'DETAIL members',
+    showPw: false, pwInput: '', viewSession: null,
     showSubmit: false, submitStatus: null, submitMsg: '',
     form: { owner:'detail-vu', repo:'detail-lab-content', branch:'main', token:'',
             date:'', title:'', presenter:'', venue:'', tags:[], paperUrl:'', body:'' }
@@ -306,7 +320,9 @@ class Component extends DCLogic {
       }
     }
     const t = (typeof localStorage!=='undefined') && localStorage.getItem('detail_gh_token');
-    if(t){ this.setState({ auth:'authorizing' }); this.verifyAccess(t); }
+    if(t){ this.setState({ auth:'authorizing' }); this.verifyAccess(t); return; }
+    const vs = (typeof localStorage!=='undefined') && localStorage.getItem('detail_view_session');
+    if(vs){ this.setState({ auth:'viewer', viewSession: vs, memberLabel:'Viewer (read-only)' }); this.loadIndex(); }
   }
 
   login(){
@@ -324,6 +340,28 @@ class Component extends DCLogic {
     if(!t){ this.setState({ accessMsg:'Enter a token first.' }); return; }
     this.setState({ auth:'authorizing', accessMsg:'' });
     this.verifyAccess(t);
+  }
+
+  // ── PASSWORD (read-only viewer via worker proxy) ───────
+  togglePw(){ this.setState(s=>({ showPw: !s.showPw })); }
+  onPwInput(e){ this.setState({ pwInput: e.target.value }); }
+  async unlockPassword(){
+    const pw = (this.state.pwInput||'').trim();
+    if(!pw){ this.setState({ accessMsg:'Enter the password first.' }); return; }
+    this.setState({ auth:'authorizing', accessMsg:'' });
+    try {
+      const r = await fetch(DETAIL_OAUTH_BASE + '/unlock', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ password: pw }) });
+      if(r.status===200){
+        const j = await r.json();
+        try { localStorage.setItem('detail_view_session', j.session); } catch(e){}
+        this.setState({ auth:'viewer', viewSession: j.session, memberLabel:'Viewer (read-only)', accessMsg:'', pwInput:'' });
+        this.loadIndex();
+      } else if(r.status===401){
+        this.setState({ auth:'anon', accessMsg:'Wrong password.' });
+      } else {
+        this.setState({ auth:'anon', accessMsg:'Unlock failed ('+r.status+').' });
+      }
+    } catch(e){ this.setState({ auth:'anon', accessMsg:'Network error during unlock.' }); }
   }
 
   async verifyAccess(token){
@@ -348,14 +386,25 @@ class Component extends DCLogic {
 
   logout(){
     try { localStorage.removeItem('detail_gh_token'); } catch(e){}
-    this.setState({ auth:'anon', tokenInput:'', accessMsg:'', showSubmit:false, sessions:[], activeId:null, status:'loading' });
+    try { localStorage.removeItem('detail_view_session'); } catch(e){}
+    this.setState({ auth:'anon', viewSession:null, tokenInput:'', pwInput:'', accessMsg:'', showSubmit:false, sessions:[], activeId:null, status:'loading' });
   }
 
   // ── CONTENT LOADER ─────────────────────────────────────
+  // Fetch a content path from either the worker (password viewer) or GitHub (token).
+  // Both return a GitHub-Contents-style JSON with a base64 `.content` field.
+  cget(path){
+    if(this.state.auth==='viewer'){
+      const s = this.state.viewSession || ((typeof localStorage!=='undefined' && localStorage.getItem('detail_view_session')) || '');
+      return fetch(DETAIL_OAUTH_BASE + '/content?path=' + encodeURIComponent(path) + '&ref=' + encodeURIComponent(DETAIL_BRANCH), { headers: { 'Authorization':'Bearer ' + s } });
+    }
+    return fetch(GH_API + path + '?ref=' + encodeURIComponent(DETAIL_BRANCH), { headers: ghHeaders(this.state.form.token) });
+  }
+
   async loadIndex(){
     try {
-      const token = this.state.form.token;
-      const res = await fetch(GH_API + 'data/reading/index.json?ref=' + DETAIL_BRANCH, { headers: ghHeaders(token) });
+      const res = await this.cget('data/reading/index.json');
+      if(res.status===401 && this.state.auth==='viewer'){ try{ localStorage.removeItem('detail_view_session'); }catch(e){} this.setState({ auth:'anon', viewSession:null, status:'loading', accessMsg:'Viewer session expired — enter the password again.' }); return; }
       if(!res.ok) throw new Error('index');
       const json = await res.json();
       const sessions = JSON.parse(b64decode(json.content));
@@ -369,8 +418,8 @@ class Component extends DCLogic {
   async loadMd(session){
     if(this.state.mdCache[session.id]) return;
     try {
-      const token = this.state.form.token;
-      const res = await fetch(GH_API + 'data/reading/' + session.file + '?ref=' + DETAIL_BRANCH, { headers: ghHeaders(token) });
+      const res = await this.cget('data/reading/' + session.file);
+      if(res.status===401 && this.state.auth==='viewer'){ try{ localStorage.removeItem('detail_view_session'); }catch(e){} this.setState({ auth:'anon', viewSession:null, status:'loading', sessions:[], activeId:null, accessMsg:'Viewer session expired — enter the password again.' }); return; }
       const text = res.ok ? b64decode((await res.json()).content) : '*Could not load this session.*';
       this.setState(s=>({ mdCache: { ...s.mdCache, [session.id]: text } }));
     } catch(e){
@@ -522,7 +571,8 @@ class Component extends DCLogic {
       authIsAnon: auth==='anon',
       authIsAuthorizing: auth==='authorizing',
       authIsDenied: auth==='denied',
-      authIsAuthorized: auth==='authorized',
+      authIsAuthorized: auth==='authorized' || auth==='viewer',
+      canSubmit: auth==='authorized',
       login: ()=>this.login(),
       logout: ()=>this.logout(),
       toggleToken: ()=>this.toggleToken(),
@@ -530,6 +580,11 @@ class Component extends DCLogic {
       tokenInput: this.state.tokenInput,
       onTokenInput: (e)=>this.onTokenInput(e),
       unlockToken: ()=>this.unlockToken(),
+      togglePw: ()=>this.togglePw(),
+      showPw: this.state.showPw,
+      pwInput: this.state.pwInput,
+      onPwInput: (e)=>this.onPwInput(e),
+      unlockPassword: ()=>this.unlockPassword(),
       accessMsg: this.state.accessMsg,
       hasAccessMsg: !!this.state.accessMsg,
       memberLabel: this.state.memberLabel,
