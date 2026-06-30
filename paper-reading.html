@@ -127,7 +127,15 @@
       <div style="width:100%;max-width:460px;background:#fff;border:1px solid #F3C6CC;border-radius:18px;padding:36px 34px;text-align:center;box-shadow:0 24px 60px -34px rgba(60,20,30,.35);">
         <div style="width:60px;height:60px;border-radius:16px;background:#FBE6DA;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;">🚫</div>
         <h2 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#1A1A2E;letter-spacing:-.01em;">No access</h2>
-        <p style="font-size:14px;line-height:1.6;color:#5A6079;margin:0 0 24px;">Your GitHub account isn't authorized yet. Please accept the GitHub organization / repository invitation email sent to you, then reload this page to gain access. Didn't get one? Ask the PI (<a href="mailto:xun.jiao@villanova.edu" style="color:#2A6FDB;font-weight:600;">xun.jiao@villanova.edu</a>) to invite you.</p>
+        <sc-if value="{{ deniedLogin }}">
+          <div style="font-size:13px;font-weight:600;color:#5A6079;margin:0 0 14px;">You're signed in as <span style="font-weight:800;color:#003087;">@{{ deniedLogin }}</span> — this account can't read the private content repo.</div>
+        </sc-if>
+        <div style="font-size:13.5px;line-height:1.65;color:#5A6079;margin:0 0 22px;text-align:left;background:#F4F6FA;border:1px solid #E1E6F0;border-radius:10px;padding:14px 16px;">
+          <div style="font-weight:700;color:#1A1A2E;margin-bottom:8px;">Two possible reasons:</div>
+          <div style="margin-bottom:8px;"><b>1.</b> You're not a collaborator yet → accept the GitHub <b>org / repo invitation email</b>, then reload.</div>
+          <div><b>2.</b> You <i>are</i> a member, but the organization hasn't approved this login app → an owner must approve it at <b>Org → Settings → Third-party access → OAuth app policy</b> (or grant <code style="background:#EEF1F8;padding:0 4px;border-radius:4px;">detail-vu</code> on the GitHub authorize screen during login).</div>
+          <div style="margin-top:8px;color:#8A90A6;">Questions? <a href="mailto:xun.jiao@villanova.edu" style="color:#2A6FDB;font-weight:600;">xun.jiao@villanova.edu</a></div>
+        </div>
         <button onClick="{{ logout }}" style="background:#003087;color:#fff;font-weight:700;font-size:14px;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;">Try a different account</button>
       </div>
     </section>
@@ -276,7 +284,7 @@ class Component extends DCLogic {
   state = {
     sessions: [], activeId: null, mdCache: {}, query: '', tag: 'All', status: 'loading',
     auth: 'anon', showToken: false, tokenInput: '', accessMsg: '', memberLabel: 'DETAIL members',
-    showPw: false, pwInput: '', viewSession: null,
+    showPw: false, pwInput: '', viewSession: null, deniedLogin: '',
     showSubmit: false, submitStatus: null, submitMsg: '',
     commentsCache: {}, commentInput: '', commentStatus: null, commentMsg: '',
     form: { owner:'detail-vu', repo:'detail-lab-content', branch:'main', token:'',
@@ -358,8 +366,10 @@ class Component extends DCLogic {
         this.setState({ auth:'authorized', memberLabel: label, accessMsg:'', form:{ ...this.state.form, token, owner:DETAIL_OWNER, repo:DETAIL_CONTENT_REPO, branch:DETAIL_BRANCH } });
         this.loadIndex();
       } else if([401,403,404].includes(res.status)){
+        let who = '';
+        try { const u = await fetch('https://api.github.com/user',{headers:ghHeaders(token)}); if(u.ok){ const uj=await u.json(); who = uj.login || ''; } } catch(e){}
         try { localStorage.removeItem('detail_gh_token'); } catch(e){}
-        this.setState({ auth:'denied' });
+        this.setState({ auth:'denied', deniedLogin: who });
       } else {
         this.setState({ auth:'anon', accessMsg:'Unexpected response ('+res.status+'). Try again.' });
       }
@@ -639,6 +649,7 @@ class Component extends DCLogic {
       authIsAnon: auth==='anon',
       authIsAuthorizing: auth==='authorizing',
       authIsDenied: auth==='denied',
+      deniedLogin: this.state.deniedLogin,
       authIsAuthorized: auth==='authorized' || auth==='viewer',
       canSubmit: auth==='authorized',
       login: ()=>this.login(),
